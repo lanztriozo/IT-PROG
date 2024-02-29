@@ -148,6 +148,19 @@ ADD CONSTRAINT fk_catalog_id
 FOREIGN KEY (catalog_id)
 REFERENCES Catalog (catalog_id)
 ON DELETE CASCADE;
+
+DROP TABLE IF EXISTS item_list;
+CREATE TABLE IF NOT EXISTS item_list
+(
+catalog_id INT NOT NULL,
+item_id INT NOT NULL,
+CONSTRAINT `fk_catalogue_id`
+FOREIGN KEY (catalog_id)
+REFERENCES confectionary_db.`Catalog` (catalog_id),
+CONSTRAINT `fk_item_id`
+FOREIGN KEY (item_id)
+REFERENCES confectionary_db.item (item_id)
+);
 -- User
 INSERT INTO `User` (user_id,user_name,user_password,isAdmin, wallet)
 VALUES
@@ -247,12 +260,12 @@ VALUES
     (10003,103,203,303,403,900);
 
 -- Catalog
-INSERT INTO Catalog (catalog_ID,set_id,item_id)
+INSERT INTO Catalog (catalog_ID,set_id)
 VALUES
-	(22000,10000,100),
-    (22001,10001,101),
-    (22002,10002,102),
-    (22003,10003,103);
+	(22000,10000),
+    (22001,10001),
+    (22002,10002),
+    (22003,10003);
 -- Cart
 INSERT INTO Cart (user_ID,quantity,catalog_id)
 VALUES
@@ -261,4 +274,11 @@ VALUES
     (111202, 1, 22002),
     (111203, 4, 22003),
     (111204, 3, 22003);
-    
+
+-- Catalog
+INSERT INTO item_list (catalog_ID,item_id)
+VALUES
+	(22000,100),
+    (22001,101),
+    (22002,102),
+    (22003,103);

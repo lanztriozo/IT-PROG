@@ -53,7 +53,7 @@
                 $item = $_POST['item']; //item id
                 $cartid = $_POST['cart']; //user id
                 $quantity = $_POST['quantity'];
-                $counter = 0; $catalogArray = array();
+                $counter = 0; $catalogArray = array(); $counter2 = 0;
 
                 $sql1 = mysqli_query($conn,"SELECT * FROM cart WHERE user_id='$cartid'");
                 while($result1 = mysqli_fetch_assoc($sql1)) {
@@ -76,8 +76,16 @@
                     }
                 }
 
+                $sql2 = "SELECT * FROM cart WHERE user_id='$userid'";
+                $result2 = $conn->query($sql2);
+                if ($result2->num_rows > 0) {
+                    ++$counter2;
+                }
+                
+                
+
                 // adds catalog
-                if($counter == 0 && $quantity != 0) {
+                if($counter == 0 && $quantity != 0 && $counter2 == 0) {
                     $catalogGet = mysqli_query($conn,"SELECT * FROM catalog"); //adds another catalog even if a duplication error occurs in the cart
                     while($catalogResult = mysqli_fetch_assoc($catalogGet)) {
                         $catalogid = $catalogResult['catalog_id'];
@@ -92,6 +100,8 @@
                     mysqli_query($conn, $insertCart);
                 } elseif ($quantity == 0) {
                     echo "add quantity to your item"; // goes on top of the page selection
+                } elseif ($counter2 != 0) {
+                    echo "cannot add multiple items to the cart"; 
                 } else {
                     echo "already in cart, remove item in cart first if u want to increase quantity"; // goes on top of the page selection
                 }
