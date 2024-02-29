@@ -145,17 +145,18 @@ REFERENCES Catalog (catalog_id)
 ON DELETE CASCADE;
 
 DROP TABLE IF EXISTS item_list;
+-- item_list
 CREATE TABLE IF NOT EXISTS item_list
 (
-catalog_id INT NOT NULL,
-item_id INT NOT NULL,
-quantity INT NOT NULL,
-CONSTRAINT `fk_item-list_catalogue_id`
-FOREIGN KEY (catalog_id)
-REFERENCES confectionary_db.`Catalog` (catalog_id),
-CONSTRAINT `fk_item-list_item_id`
-FOREIGN KEY (item_id)
-REFERENCES confectionary_db.Item (item_id)
+    catalog_id INT NULL,  -- Allow NULL for catalog_id
+    item_id INT NULL,     -- Allow NULL for item_id
+    quantity INT NOT NULL,
+    CONSTRAINT `fk_item-list_catalogue_id`
+    FOREIGN KEY (catalog_id)
+    REFERENCES confectionary_db.Catalog (catalog_id) ON DELETE SET NULL,  -- Allow NULL for catalog_id
+    CONSTRAINT `fk_item-list_item_id`
+    FOREIGN KEY (item_id)
+    REFERENCES confectionary_db.Item (item_id) ON DELETE SET NULL  -- Allow NULL for item_id
 );
 -- User
 INSERT INTO `User` (user_id,user_name,user_password,isAdmin, wallet)
