@@ -126,7 +126,6 @@ DROP TABLE IF EXISTS Cart;
 CREATE TABLE IF NOT EXISTS Cart
 (
 user_id INT PRIMARY KEY NOT NULL,
-quantity INT NOT NULL,
 catalog_id INT NOT NULL,
 CONSTRAINT `fk_user_id`
 FOREIGN KEY (user_id)
@@ -150,6 +149,7 @@ CREATE TABLE IF NOT EXISTS item_list
 (
 catalog_id INT NOT NULL,
 item_id INT NOT NULL,
+quantity INT NOT NULL,
 CONSTRAINT `fk_item-list_catalogue_id`
 FOREIGN KEY (catalog_id)
 REFERENCES confectionary_db.`Catalog` (catalog_id),
@@ -263,18 +263,18 @@ VALUES
     (22002,10002),
     (22003,10003);
 -- Cart
-INSERT INTO Cart (user_ID,quantity,catalog_id)
+INSERT INTO Cart (user_ID,catalog_id)
 VALUES
-	(111200, 2, 22000),
-    (111201, 3, 22001), 
-    (111202, 1, 22002),
-    (111203, 4, 22003),
-    (111204, 3, 22003);
+	(111200, 22000),
+    (111201, 22001), 
+    (111202, 22002),
+    (111203, 22003),
+    (111204, 22003);
 
 -- item_list
-INSERT INTO item_list (catalog_ID,item_id)
+INSERT INTO item_list (catalog_ID,item_id,quantity)
 VALUES
-	(22000,100),
-    (22001,101),
-    (22002,102),
-    (22003,103);
+	(22000,100,2),
+    (22001,101,3),
+    (22002,102,4),
+    (22003,103,6);
