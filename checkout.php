@@ -29,8 +29,12 @@ session_start();
             $conn->query($sql);
             $sql = "DELETE FROM Cart WHERE user_id = $userID";
             $conn->query($sql);
+            header("home.php");
+            exit();
         }
         else{
-            echo "<br>Transaction Failed";
+            echo "<br>Transaction Failed<br>";
+            $back = "cart.php";
+            echo '<button onclick="window.location.href=\'' . $back . '\';">Go Back</button>';
         }
     

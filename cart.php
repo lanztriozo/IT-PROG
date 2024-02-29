@@ -38,6 +38,19 @@
         margin: 0 15px; 
         padding: 10px;
     }
+
+    .cart-header {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: -15px;
+    }
+
+    .cart-container table {
+    margin: auto;
+    }
+
 </style>
 </head>
 <body>
@@ -53,7 +66,7 @@
     </div>
     <?php
     session_start();
-    
+
     if (isset($_SESSION['user_id'])) {
         $userId = $_SESSION['user_id'];
         $totalPrice = 0; // Initialize total price variable
@@ -94,11 +107,21 @@
                     INNER JOIN Item ON item_list.item_id = Item.item_id
                     WHERE Catalog.catalog_id IN (SELECT catalog_id FROM Cart WHERE user_id = $userId)";
         $resultItems = $conn->query($sqlItems);
-
-        echo "<h2>Cart Items:</h2>";
-        echo "<table border='1'>";
-        echo "<tr><th>Item</th><th>Price</th><th>Quantity</th><th>Subtotal</th></tr>";
-
+        ?>
+        <div class="cart-header">
+        <h2>Shopping Cart</h2>
+        </div>
+        <table border='1'>
+        <div class = "cart-container">
+        <table border="1" width='350'>
+            <tr bgcolor="pink">
+                <th>Item</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+            </tr>
+        </div>
+        <?php
         // Display sets and their prices
         while ($row = $resultSets->fetch_assoc()) {
             echo "<tr>";

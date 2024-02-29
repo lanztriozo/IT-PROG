@@ -1,14 +1,7 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "confectionary_db";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+session_start();
+$conn = mysqli_connect("localhost","root", "") or die ("Unable to connect!". mysqli_error());
+        mysqli_select_db($conn, "confectionary_db");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST["username"];
@@ -19,11 +12,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result->num_rows > 0) {
         session_start();
-        $_SESSION['userid'] = $result->fetch_assoc()['user_id'];
+        $_SESSION['user_id'] = $result->fetch_assoc()['user_id'];
         header("Location: home.php");
         exit();
     } else {
-        echo "Invalid username or password";
+        //tracks what session passed and if credentials didn't match then loginfail becomes true then the red text displays
+        $_SESSION['loginfail'] = true;
+        header("Location: index.php");
+        exit();
     }
 }
 

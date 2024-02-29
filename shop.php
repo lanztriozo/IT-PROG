@@ -87,65 +87,57 @@
 <body>
     <?php
         session_start();
-        $userid = isset($_SESSION['userid']) ? $_SESSION['userid'] : 0; // put user id here
+        $userid = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0; // put user id here
         $conn = mysqli_connect("localhost","root", "") or die ("Unable to connect!". mysqli_error());
         mysqli_select_db($conn, "confectionary_db");
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (isset($_POST['item']) && isset($_POST['cart']) && isset($_POST['quantity'])) { 
-                $item = $_POST['item']; //item id
-                $cartid = $_POST['cart']; //user id
+                $item = (int)$_POST['item']; //item id
+                $cartid = (int)$_POST['cart']; //user id
                 $quantity = $_POST['quantity'];
-                $counter = 0; $catalogArray = array(); $counter2 = 0;
+                $counter = 0; $catalogArray; $itemquantity;
 
                 $sql1 = mysqli_query($conn,"SELECT * FROM cart WHERE user_id='$cartid'");
                 while($result1 = mysqli_fetch_assoc($sql1)) {
-                    $catalogArray = $result1['catalog_id'];
+                    (int)$catalogArray = $result1['catalog_id'];
                 }
 
-                if(is_array($catalogArray) && !is_null($catalogArray)) {
-                    foreach ($catalogArray as $value) {
-                        $sql2 = "SELECT * FROM catalog WHERE catalog_id='$value' AND item_id='$item'";
-                        $result2 = $conn->query($sql2);
-                        if ($result2->num_rows > 0) {
-                            ++$counter;
-                        }
+                if(empty($catalogArray)) { //checks if there is a catalog for the user id
+                    $catalogGet = mysqli_query($conn,"SELECT MAX(catalog_id) AS high FROM catalog"); 
+                    while($catalogResult = mysqli_fetch_assoc($catalogGet)) {
+                        (int)$catalogid = $catalogResult['high'];
                     }
-                } elseif(!is_null($catalogArray)) {
-                    $sql2 = "SELECT * FROM catalog WHERE catalog_id='$catalogArray' AND item_id='$item'";
-                    $result2 = $conn->query($sql2);
-                    if ($result2->num_rows > 0) {
+                    (int)$newID = ($catalogid + 1);
+                    $insertCat = "INSERT INTO catalog(catalog_id) VALUES('$newID')";
+                    mysqli_query($conn, $insertCat);
+                    $insertCat = "INSERT INTO cart VALUES('$cartid','$newID')";
+                    mysqli_query($conn, $insertCat);
+                    (int)$catalogArray = $newID;
+                } else {
+                    $sql = "SELECT * FROM item_list WHERE item_id='$item' AND catalog_id='$catalogArray'";
+                    $result = $conn->query($sql);
+                    if ($result->num_rows > 0) {
                         ++$counter;
                     }
                 }
 
-                $sql2 = "SELECT * FROM cart WHERE user_id='$userid'";
-                $result2 = $conn->query($sql2);
-                if ($result2->num_rows > 0) {
-                    ++$counter2;
+                $sql2 = mysqli_query($conn,"SELECT * FROM item WHERE item_id='$item'");
+                while($result2 = mysqli_fetch_assoc($sql2)) {
+                    (int)$itemquantity = $result2['item_stock'];
                 }
-                // adds catalog
-                if($counter == 0 && $quantity != 0 && $counter2 == 0) {
-                    $catalogGet = mysqli_query($conn,"SELECT * FROM catalog"); //adds another catalog even if a duplication error occurs in the cart
-                    while($catalogResult = mysqli_fetch_assoc($catalogGet)) {
-                        $catalogid = $catalogResult['catalog_id'];
-                    }
-                    $newID = ($catalogid + 1);
-                    $insertCat = "INSERT INTO catalog(catalog_id,item_id) VALUES('$newID','$item')";
-                    mysqli_query($conn, $insertCat);
 
-                    //adds cart
-                    $insertCart = "INSERT INTO cart VALUES('$cartid', '$quantity', '$newID')";  //causes duplication error if picking another item
-                        
+                if($counter == 0 && $quantity != 0 && !empty($quantity) && $quantity <= $itemquantity) {
+                    $insertCart = "INSERT INTO item_list(catalog_id,item_id,quantity) VALUES('$catalogArray', '$item', '$quantity')"; 
                     mysqli_query($conn, $insertCart);
-                } elseif ($quantity == 0) {
+                    echo "item added to cart";
+                } elseif ($quantity > $itemquantity) {
+                    echo "quantity too high"; // goes on top of the page selection
+                } elseif ($quantity == 0 || empty($quantity)) {
                     echo "add quantity to your item"; // goes on top of the page selection
-                } elseif ($counter2 != 0) {
-                    echo "cannot add multiple items to the cart"; 
                 } else {
                     echo "already in cart, remove item in cart first if u want to increase quantity"; // goes on top of the page selection
                 }
-                
             }
         }
     ?>

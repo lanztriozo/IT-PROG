@@ -107,6 +107,13 @@
                             <input type="text" name="username" required><br>
                             <label for="password">Password:</label>
                             <input type="password" name="password" required><br>
+                            <?php
+                            session_start();//session will be what tracks the status of a login, whether it failed or not.
+                            if (isset($_SESSION['loginfail']) && $_SESSION['loginfail']) {
+                                echo '<div style="color: red;">Invalid username or password</div>';
+                                unset($_SESSION['loginfail']);
+                            }
+                            ?>
                         </div>
                         <button type="submit" className="signin-button">Sign in</button>
                     </form>
