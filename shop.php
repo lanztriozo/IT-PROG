@@ -38,7 +38,50 @@
         margin: 0 15px; 
         padding: 10px;
     }
+
+    .shop-header {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: -15px;
     
+    }
+
+    .category-filter-container {
+    background-color: #fa89d1;
+    margin-left: 525px;
+    max-width: 400px;
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .category-filter-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    }
+
+    .category-filter-form label {
+    margin-bottom: 5px;
+    }
+
+    .category-filter-form select, .category-filter-form input[type="submit"] {
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    }
+    
+    .shop-container table {
+    margin: auto;
+    }
+
+    .user-id {
+    margin-left: 695px;
+    }
 </style>
 </head>
 <body>
@@ -81,9 +124,6 @@
                 if ($result2->num_rows > 0) {
                     ++$counter2;
                 }
-                
-                
-
                 // adds catalog
                 if($counter == 0 && $quantity != 0 && $counter2 == 0) {
                     $catalogGet = mysqli_query($conn,"SELECT * FROM catalog"); //adds another catalog even if a duplication error occurs in the cart
@@ -119,11 +159,17 @@
             </nav>
         </div>
     </div>
-    <h2>Shop</h2>
+    <div class="shop-header">
+        <h2>Shop</h2>
+    </div>
+    <div class = "user-id">
     <?php
     //To twest and check if the user_id passed properly from the login.
     echo "<p>User ID: $userid</p>";
     ?>
+    </div>
+    <div class="category-filter-container">
+    <div class="category-filter-form">
     <form method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>">
         <label for="category">Category Filter:</label>
         <select name="category" id="category">
@@ -137,8 +183,10 @@
         </select>
         <input type="submit" value="Filter">
     </form>
-
-    <table border="1" width='750'>
+    </div>
+    </div>
+    <div class = "shop-container">
+    <table border="1" width='850'>
         <tr bgcolor="pink">
             <th>Name</th>
             <th>Category</th>
@@ -147,7 +195,7 @@
             <th>Stock</th>
             <th>Quantity</th>
         </tr>
-
+    </div>
         <?php
             $categoryFilter = isset($_GET['category']) ? $_GET['category'] : '';
             $itemQuery = "SELECT * FROM item

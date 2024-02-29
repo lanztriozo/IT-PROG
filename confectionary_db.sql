@@ -268,8 +268,7 @@ VALUES
 	(111200, 22000),
     (111201, 22001), 
     (111202, 22002),
-    (111203, 22003),
-    (111204, 22003);
+    (111203, 22003);
 
 -- item_list
 INSERT INTO item_list (catalog_ID,item_id,quantity)
