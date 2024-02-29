@@ -116,7 +116,7 @@ DROP TABLE IF EXISTS Catalog;
 CREATE TABLE IF NOT EXISTS Catalog
 (
 catalog_id INT PRIMARY KEY NOT NULL,
-set_id INT UNIQUE NOT NULL,
+set_id INT UNIQUE NULL,
 CONSTRAINT `fk_set_id`
 FOREIGN KEY (set_id)
 REFERENCES confectionary_db.`Set` (set_id)
