@@ -64,6 +64,46 @@
         margin: 0 15px; 
         padding: 10px;
     }
+
+    .category-filter-container {
+    background-color: #fa89d1;
+    margin-left: 525px;
+    max-width: 400px;
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .category-filter-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 16px; 
+    font-weight: 700; 
+    line-height: 25px; 
+    }
+
+    .category-filter-form label {
+    margin-bottom: 5px;
+    }
+
+    .category-filter-form select, .category-filter-form input[type="submit"] {
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    }
+
+    .set-header {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 15px;
+    }
     </style>
 </head>
 <body>
@@ -77,8 +117,9 @@
             </nav>
         </div>
     </div>
+    <div class="set-header">
     <h2>Select Confectionaries</h2>
-
+    </div>
     <form method="post" action="process_form.php">
 
         <?php
@@ -100,43 +141,60 @@
             }
         }
         ?>
-
+        <div class="category-filter-container">
+        <div class="category-filter-form">
         <label for="chocolate">Chocolate:</label>
         <select name="chocolate" id="chocolate" onchange="updatePrice('chocolate')">
             <option>Choose a Chocolate Tooth</option>
             <?php fetchItems(1, $conn); ?>
         </select>
-        <span id="chocolate_price"> - Price: ₱0.00</span>
-        <br><br>
+        <span id="chocolate_price"> Price: ₱0.00</span>
+        </div>
+        </div>
 
+        <div class="category-filter-container">
+        <div class="category-filter-form">
         <label for="candy">Candy:</label>
         <select name="candy" id="candy" onchange="updatePrice('candy')">
             <option>Choose a Candy Tooth</option>
             <?php fetchItems(4, $conn); ?>
         </select>
-        <span id="candy_price"> - Price: ₱0.00</span>
-        <br><br>
+        <span id="candy_price"> Price: ₱0.00</span>
+        </div>
+        </div>
 
+        <div class="category-filter-container">
+        <div class="category-filter-form">
         <label for="cake">Cake:</label>
         <select name="cake" id="cake" onchange="updatePrice('cake')">
             <option>Choose a Cake Tooth</option>
             <?php fetchItems(3, $conn); ?>
         </select> 
-        <span id="cake_price"> - Price: ₱0.00</span>
-        <br><br>
+        <span id="cake_price"> Price: ₱0.00</span>
+        </div>
+        </div>
 
+        <div class="category-filter-container">
+        <div class="category-filter-form">
         <label for="pastry">Pastry:</label>
         <select name="pastry" id="pastry" onchange="updatePrice('pastry')">
             <option>Choose a Pastry Tooth</option>
             <?php fetchItems(2, $conn); ?>
         </select>
-        <span id="pastry_price"> - Price: ₱0.00</span>
-        <br><br>
+        <span id="pastry_price"> Price: ₱0.00</span>
+        </div>
+        </div>
 
+        <div class="category-filter-container">
+        <div class="category-filter-form">
         <div id="set_price">Total Set Price (90%): ₱0.00</div>
-        <br>
-
+        </div>
+        </div>
+        <div class="category-filter-container">
+        <div class="category-filter-form">
         <input type="submit" value="Submit">
+        </div>
+        </div>
     </form>
 
     <?php mysqli_close($conn); ?>

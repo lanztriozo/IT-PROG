@@ -47,10 +47,36 @@
     margin-bottom: -15px;
     }
 
+    .category-filter-container {
+    background-color: #fa89d1;
+    margin-left: 525px;
+    max-width: 400px;
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .category-filter-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    }
+
+    .category-filter-form label {
+    margin-bottom: 5px;
+    }
+
+    .category-filter-form select, .category-filter-form input[type="submit"] {
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    }
+
     .cart-container table {
     margin: auto;
     }
-
 </style>
 </head>
 <body>
@@ -111,7 +137,6 @@
         <div class="cart-header">
         <h2>Shopping Cart</h2>
         </div>
-        <table border='1'>
         <div class = "cart-container">
         <table border="1" width='350'>
             <tr bgcolor="pink">
@@ -155,18 +180,29 @@
     }
     ?>
         </div>
-        <div>
-            <p>Total Price: <?php echo $totalPrice; ?></p>
+        <div class="category-filter-container">
+        <div class="category-filter-form">
             <?php if($totalPrice > 0) { ?>
-                <form action="checkout.php" method="post">
-                    <input type="hidden" name="user_id" value="<?php echo $userId; ?>">
-                    <input type="submit" value="Checkout">
-                </form>
+                <div style="text-align: center;">
+                
+    <form action="checkout.php" method="post">
+        <input type="hidden" name="user_id" value="<?php echo $userId; ?>">
+        <input type="submit" value="Checkout">
+    </form>
+            </div>
+            </div>
+</div>
+
             <?php } ?>
-            <form action="addWallet.php" method="post">
-            <input type="hidden" name="user_id" value="<?php echo $userId; ?>">
-            <input type="submit" value="Add to Wallet">
-        </form>
+            <div style="text-align: center;">
+            <div class="category-filter-container">
+        <div class="category-filter-form">
+    <form action="addWallet.php" method="post">
+        <input type="hidden" name="user_id" value="<?php echo $userId; ?>">
+        <input type="submit" value="Add to Wallet">
+    </form>
+</div>
+            </div>
         </div>
 </body>
 </html>
