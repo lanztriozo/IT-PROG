@@ -54,9 +54,9 @@
     <div>
         <?php
         session_start();
-        $userId = isset($_SESSION['userid']) ? $_SESSION['userid'] : 0;
+        $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
         if(isset($_SESSION['user_id'])) {
-            $userId = isset($_SESSION['userid']) ? $_SESSION['userid'] : 0;
+            $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
 
             $conn = mysqli_connect("localhost","root", "") or die ("Unable to connect!". mysqli_error());
             mysqli_select_db($conn, "confectionary_db");
