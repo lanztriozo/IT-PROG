@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cart</title>
-</head>
 <style>
     body {
         margin: 0;
@@ -38,10 +37,11 @@
         text-decoration: none;
         margin: 0 15px; 
         padding: 10px;
-    }   
+    }
 </style>
+</head>
 <body>
-    <div class ="container">
+    <div class="container">
         <div class="navbar">
             <nav>
                 <a href="home.php">Home</a>
@@ -51,78 +51,99 @@
             </nav>
         </div>
     </div>
-    <div>
-        <?php
-        session_start();
-        $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
-        if(isset($_SESSION['user_id'])) {
-            $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
+    <?php
+    session_start();
+    
+    if (isset($_SESSION['user_id'])) {
+        $userId = $_SESSION['user_id'];
+        $totalPrice = 0; // Initialize total price variable
 
-            $conn = mysqli_connect("localhost","root", "") or die ("Unable to connect!". mysqli_error());
-            mysqli_select_db($conn, "confectionary_db");
+        // Database connection
+        $servername = "localhost";
+        $username = "root";
+        $password = "";
+        $dbname = "confectionary_db";
 
+        $conn = new mysqli($servername, $username, $password, $dbname);
 
-            $sql = "SELECT wallet FROM User WHERE user_id = $userId";
-            $result = $conn->query($sql);
-            if ($result->num_rows > 0) {
-                $row = $result->fetch_assoc();
-                $wallet = $row["wallet"];
-                $_SESSION['user_wallet']= $wallet;
-                echo "<p>User's Wallet: $wallet</p>";
-            }
-
-            $sql = "SELECT Cart.quantity, Catalog.catalog_id, Catalog.set_id, Catalog.item_id, Item.item_name, Item.item_price
-                    FROM Cart
-                    INNER JOIN Catalog ON Cart.catalog_id = Catalog.catalog_id
-                    LEFT JOIN Item ON Catalog.item_id = Item.item_id
-                    WHERE Cart.user_id = $userId";
-            $result = $conn->query($sql);
-
-            $totalPrice = 0;
-
-            if ($result->num_rows > 0) {
-                echo "<table>";
-                echo "<tr><th>Quantity</th><th>Item/Set</th><th>Price</th><th>Action</th></tr>";
-                while($row = $result->fetch_assoc()) {
-                    echo "<tr>";
-                    echo "<td>" . $row["quantity"] . "</td>";
-                    echo "<td>";
-                    if ($row["set_id"] != null) {
-                        echo "Set";
-                    } else {
-                        echo $row["item_name"];
-                    }
-                    echo "</td>";
-                    echo "<td>" . $row["item_price"] * $row["quantity"] . "</td>";
-                    echo "<td><a href='remove_item.php?catalog_id=" . $row["catalog_id"] . "'>Remove</a></td>";
-                    echo "</tr>";
- 
-                    $totalPrice += $row["item_price"] * $row["quantity"];
-                    $_SESSION['total_price'] = $totalPrice;
-                }
-                echo "</table>";
-            } else {
-                echo "No items in the cart.";
-            }
-
-            $conn->close();
-        } else {
-            echo "<br>id not found";
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
         }
-        ?>
-    </div>
-    <div>
-        <p>Total Price: <?php echo $totalPrice; ?></p>
-        <?php if($totalPrice > 0) { ?>
-            <form action="checkout.php" method="post">
-                <input type="hidden" name="user_id" value="<?php echo $userId; ?>">
-                <input type="submit" value="Checkout">
-            </form>
-        <?php } ?>
-        <form action="addWallet.php" method="post">
-        <input type="hidden" name="user_id" value="<?php echo $userId; ?>">
-        <input type="submit" value="Add to Wallet">
-    </form>
-    </div>
+
+        // Retrieve user's wallet balance
+        $sqlWallet = "SELECT wallet FROM User WHERE user_id = $userId";
+        $resultWallet = $conn->query($sqlWallet);
+        $walletBalance = 0;
+
+        if ($resultWallet->num_rows > 0) {
+            $row = $resultWallet->fetch_assoc();
+            $walletBalance = $row["wallet"];
+        }
+
+        // Retrieve sets in the cart
+        $sqlSets = "SELECT Catalog.catalog_id, Catalog.set_id, `Set`.set_price
+                    FROM Catalog
+                    INNER JOIN `Set` ON Catalog.set_id = `Set`.set_id
+                    WHERE Catalog.catalog_id IN (SELECT catalog_id FROM Cart WHERE user_id = $userId)";
+        $resultSets = $conn->query($sqlSets);
+
+        // Retrieve individual items in the cart
+        $sqlItems = "SELECT Catalog.catalog_id, Item.item_name, Item.item_price, item_list.quantity
+                    FROM Catalog
+                    INNER JOIN item_list ON Catalog.catalog_id = item_list.catalog_id
+                    INNER JOIN Item ON item_list.item_id = Item.item_id
+                    WHERE Catalog.catalog_id IN (SELECT catalog_id FROM Cart WHERE user_id = $userId)";
+        $resultItems = $conn->query($sqlItems);
+
+        echo "<h2>Cart Items:</h2>";
+        echo "<table border='1'>";
+        echo "<tr><th>Item</th><th>Price</th><th>Quantity</th><th>Subtotal</th></tr>";
+
+        // Display sets and their prices
+        while ($row = $resultSets->fetch_assoc()) {
+            echo "<tr>";
+            echo "<td>Set ID: " . $row["set_id"] . "</td>";
+            echo "<td>$" . $row["set_price"] . "</td>";
+            echo "<td>1</td>";
+            echo "<td>$" . $row["set_price"] . "</td>";
+            echo "</tr>";
+            $totalPrice += $row["set_price"];
+        }
+
+        // Display individual items and their prices
+        while ($row = $resultItems->fetch_assoc()) {
+            echo "<tr>";
+            echo "<td>" . $row["item_name"] . "</td>";
+            echo "<td>$" . $row["item_price"] . "</td>";
+            echo "<td>" . $row["quantity"] . "</td>";
+            echo "<td>$" . ($row["item_price"] * $row["quantity"]) . "</td>";
+            echo "</tr>";
+            $totalPrice += $row["item_price"] * $row["quantity"];
+            $_SESSION['total_price'] = $totalPrice;
+        }
+
+        echo "<tr><td colspan='3'>Total Price:</td><td>$totalPrice</td></tr>";
+        echo "<tr><td colspan='3'>Wallet Balance:</td><td>$walletBalance</td></tr>";
+        echo "</table>";
+
+        $conn->close();
+    } else {
+        echo "User ID not found.";
+    }
+    ?>
+        </div>
+        <div>
+            <p>Total Price: <?php echo $totalPrice; ?></p>
+            <?php if($totalPrice > 0) { ?>
+                <form action="checkout.php" method="post">
+                    <input type="hidden" name="user_id" value="<?php echo $userId; ?>">
+                    <input type="submit" value="Checkout">
+                </form>
+            <?php } ?>
+            <form action="addWallet.php" method="post">
+            <input type="hidden" name="user_id" value="<?php echo $userId; ?>">
+            <input type="submit" value="Add to Wallet">
+        </form>
+        </div>
 </body>
 </html>
