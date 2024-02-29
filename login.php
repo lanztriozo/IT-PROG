@@ -18,6 +18,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
+        session_start();
+        $_SESSION['userid'] = $result->fetch_assoc()['user_id'];
         header("Location: home.php");
         exit();
     } else {
