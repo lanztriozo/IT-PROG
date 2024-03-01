@@ -115,7 +115,7 @@ REFERENCES confectionary_db.Candy (candy_item_id)
 DROP TABLE IF EXISTS Catalog;
 CREATE TABLE IF NOT EXISTS Catalog
 (
-catalog_id INT PRIMARY KEY NOT NULL,
+catalog_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
 set_id INT UNIQUE NULL,
 CONSTRAINT `fk_set_id`
 FOREIGN KEY (set_id)
@@ -125,8 +125,9 @@ REFERENCES confectionary_db.`Set` (set_id)
 DROP TABLE IF EXISTS Cart;
 CREATE TABLE IF NOT EXISTS Cart
 (
-user_id INT PRIMARY KEY NOT NULL,
-catalog_id INT NOT NULL,
+user_id INT,
+catalog_id INT,
+primary key (user_id,catalog_id),
 CONSTRAINT `fk_user_id`
 FOREIGN KEY (user_id)
 REFERENCES confectionary_db.`User` (user_id),
