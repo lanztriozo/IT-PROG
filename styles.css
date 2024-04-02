@@ -1,0 +1,83 @@
+/* styles.css */
+
+body {
+    background-color: #f0f5f9; /* Pastel Blue Background */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.category-buttons {
+    margin-top: 10px;
+    background-color: #ffffff; /* White Background for Buttons */
+    padding: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+.category-button {
+    margin-right: 10px;
+    background-color: #88c3d8; /* Pastel Blue Button Background */
+    color: #ffffff; /* White Text Color */
+    border: 1px solid #88c3d8; /* Pastel Blue Border */
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.item-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 80%;
+    margin-top: 20px;
+}
+
+.item-box {
+    width: 22%;
+    background-color: #ffffff; /* White Box Background */
+    border: 2px solid #1c4966; /* Deep Blue Border */
+    border-radius: 8px;
+    margin: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.item-box img {
+    max-width: 100%;
+    border-radius: 4px;
+}
+
+.quantity-input {
+    width: 50%;
+    padding: 8px;
+    margin-top: 10px;
+}
+
+.add-to-cart-button {
+    background-color: #1c4966; /* Deep Blue Button Background */
+    color: #ffffff; /* White Text Color */
+    border: 1px solid #1c4966; /* Deep Blue Border */
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.error-message {
+    color: #ff0000; /* Red text for error messages */
+    font-size: 14px;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}

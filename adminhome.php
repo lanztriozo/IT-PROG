@@ -12,9 +12,9 @@
 
     .container { /*TWhere navbar is contained so that it doesn't take up entire page */
         text-align: center;
-        max-width: 600px;
+        max-width: 700px;
         width: 100%;
-        margin-left: 450px;
+        margin-left: 425px;
     }
     
     .navbar { /*Navigation Bar for Home, Shop, Set, Cart */
@@ -47,7 +47,7 @@
     }
 
     .home-fullscreen img {
-        max-width: 100%;
+        max-width: 25%;
         height: auto;
     }
 
@@ -70,15 +70,15 @@
     <div class ="container">
         <div class="navbar">
             <nav>
-                <a href="home.php">Home</a>
-                <a href="shop.php">Shop</a>
-                <a href="set.php">Set</a>
-                <a href="cart.php">Cart</a>
+                <a href="Admin-CompanyCreation.php">Create Company</a>
+                <a href="Admin-ItemCreation.php">Create Items</a>
+                <a href="Admin-ItemListing.php">Update Items</a>
+                <a href="Admin-UserListing.php">Update Users</a>
             </nav>
         </div>
     </div>
     <div class="home-fullscreen img">
-            <img src="sweet.png" alt="logo" /> 
+            <img src="admin.jpg" alt="logo" /> 
         </div>
 
 </body>

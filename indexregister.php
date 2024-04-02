@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In</title>
+    <title>Register</title>
 <style>
-    #root {
+   #root {
         width: 100vw;
         height: 100vh;
         margin: 0;
@@ -79,8 +79,8 @@
         display: flex;
     }
 
-    .signin-button {
-        width: 95%;
+    .register-button {
+        width: 100%;
         padding: 10px;
         border: none;
         background-color: lightpink; 
@@ -88,11 +88,10 @@
         border-radius: 4px;
         cursor: pointer;
         margin-bottom: 10px;
-        margin-left: 5px;
     }
 
-    .register-button {
-        width: 60%;
+    .back-button {
+        width: 63%;
         padding: 10px;
         border: none;
         background-color: lightpink; 
@@ -112,30 +111,33 @@
     <div class="signin-fullscreen">
         <div class="form-container">
             <div class="form-left">
-                <div class="sign-text">Sign In</div>
-                    <form class= "login-form" action="login.php" method="post">
-                        <div class="input-group">
-                            <label for="username">Username:</label>
-                            <input type="text" name="username" required><br>
-                            <label for="password">Password:</label>
-                            <input type="password" name="password" required><br>
-                            <?php
-                            session_start();//session will be what tracks the status of a login, whether it failed or not.
-                            if (isset($_SESSION['loginfail']) && $_SESSION['loginfail']) {
-                                echo '<div style="color: red;">Invalid username or password</div>';
-                                unset($_SESSION['loginfail']);
+                <div class="sign-text">Register</div>
+                <form class= "register-form" action="register.php" method="post">
+                    <div class="input-group">
+                        <label for="new_username">New Username:</label>
+                        <input type="text" name="new_username" required><br>
+                        <label for="new_password">New Password:</label>
+                        <input type="password" name="new_password" required><br>
+                        <?php
+                            session_start();//session will be what tracks the status of a register, whether it failed or not.
+                            if (isset($_SESSION['registerfail']) && $_SESSION['registerfail']) {
+                                echo '<div style="color: red;">Username already exists</div>';
+                                unset($_SESSION['registerfail']);
+                            }
+                            if (isset($_SESSION['registersuccess']) && $_SESSION['registersuccess']) {
+                                echo '<div style="color: green;">Successful Registration</div>';
+                                unset($_SESSION['registersuccess']);
                             }
                             ?>
-                        </div>
-                        <button type="submit" class="signin-button">Sign in</button>
-                    </form>
-                    <button onclick="window.location.href='indexregister.php'" class="register-button">Register</button>
+                    </div>
+                    <button type="submit" class="register-button">Register</button>
+                </form>
+                <button onclick="window.location.href='index.php'" class="back-button">Back</button>
             </div>
-                        <div class="form-right">
-                                <img src="sweet.png" alt="logo2" /> 
-                        </div>
-    </div>
-</div>
-                
+            <div class="form-right">
+                <img src="sweet.png" alt="logo2" /> 
+            </div>
+        </div>
+    </div>            
 </body>
 </html>
