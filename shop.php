@@ -8,12 +8,12 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <style>
-.container { /*TWhere navbar is contained so that it doesn't take up entire page */
+    .container { /*TWhere navbar is contained so that it doesn't take up entire page */
         text-align: center;
         max-width: 600px;
         width: 100%;
         margin-left: 0px;
-        margin-bottom: 50px;
+        margin-bottom: 10px;
     }
     
     .navbar { /*Navigation Bar for Home, Shop, Set, Cart */
@@ -137,7 +137,6 @@
 
             if (quantity > 0 && quantity <= maxStock) {
                 /*alert('Added ' + quantity + ' item(s) to cart for Item ID: ' + itemId;
-                // You can perform further actions, like sending the data to the server for processing
                 errorDiv.innerHTML = ''; // Clear any previous error message*/
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', 'addToCart.php', true);

@@ -6,8 +6,10 @@
     <title>Home</title>
     <style>
     body {
+        background-color: #f0f5f9; /* Pastel Blue Background */
         margin: 0;
-    padding: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
     }
 
     .container { /*TWhere navbar is contained so that it doesn't take up entire page */
@@ -15,6 +17,18 @@
         max-width: 600px;
         width: 100%;
         margin-left: 450px;
+    }
+
+    .container2 { 
+        text-align: right;
+        font-family: 'Trebuchet MS';
+        max-width: 70px;
+        width: 50%;
+        margin-left: 1400px;
+        line-height: 25px;
+        background-color: #fa89d1;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        margin-top: 10px;
     }
     
     .navbar { /*Navigation Bar for Home, Shop, Set, Cart */
@@ -26,7 +40,7 @@
         background-color: #fa89d1;
         box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
         border-radius: 50px;
-        margin-top: 40px; 
+        margin-top: 10px; 
     }
 
     nav {
@@ -66,7 +80,11 @@
     </style>
 </head>
 <body>
-
+    <div class ="container2">
+            <nav>
+                <a href="Index.php">Logout</a>
+            </nav>
+    </div>
     <div class ="container">
         <div class="navbar">
             <nav>

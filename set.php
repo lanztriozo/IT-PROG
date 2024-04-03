@@ -32,8 +32,10 @@
     </script>
     <style>
     body {
-        margin: 0;
+    background-color: #f0f5f9;
+    margin: 0;
     padding: 0;
+    font-family: Arial, sans-serif;
     }
     .container { /*TWhere navbar is contained so that it doesn't take up entire page */
         text-align: center;
@@ -66,13 +68,15 @@
     }
 
     .category-filter-container {
+    display: flex;
     background-color: #fa89d1;
-    margin-left: 525px;
-    max-width: 400px;
+    margin-left: 350px;
+    max-width: 800px;
     border-radius: 15px;
     padding: 10px;
     margin-bottom: 20px;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+    justify-content: space-between;
     }
 
     .category-filter-form {
@@ -103,6 +107,16 @@
     text-align: center;
     font-weight: bold;
     margin-bottom: 15px;
+    }
+
+    .price-container {
+    background-color: #fa89d1;
+    margin-left: 525px;
+    max-width: 400px;
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
     }
     </style>
 </head>
@@ -140,28 +154,55 @@
                 echo "<option value='{$row['item_id']}' data-price='{$row['item_price']}'>{$row['item_name']}</option>";
             }
         }
-        if ($result->num_rows > 0) {
-            // Display items in separate boxes
-            echo '<div class="item-container">';
-    
-            while ($row = $result->fetch_assoc()) {
-                echo '<div class="item-box">
-                        <h3>' . $row["item_name"] . '</h3>
-                        <p>' . $row["item_desc"] . '</p>
-                        <p>Stock: ' . $row["item_stock"] . '</p>
-                        <p>Price: $' . $row["item_price"] . '</p>
-                        <input type="number" class="quantity-input" placeholder="Quantity" min="1" max="' . $row["item_stock"] . '" id="quantity' . $row["item_ID"] . '">
-                        <button class="add-to-cart-button" onclick="addToCart(' . $row["item_ID"] . ', ' . $row["item_stock"] . ', '. $userid.')">Add to Cart</button>
-                        <div class="error-message" id="error' . $row["item_ID"] . '"></div>
-                    </div>';
-            }
-    
-            echo '</div>';
-        } else {
-            echo "0 results";
-        }
         ?>
-        
+        <div class="category-filter-container">
+        <div class="category-filter-form">
+        <label for="chocolate">Chocolate:</label>
+        <select name="chocolate" id="chocolate" onchange="updatePrice('chocolate')">
+            <option>Choose a Chocolate Tooth</option>
+            <?php fetchItems(1, $conn); ?>
+        </select>
+        <span id="chocolate_price"> Price: ₱0.00</span>
+        </div>
+
+        <div class="category-filter-form">
+        <label for="candy">Candy:</label>
+        <select name="candy" id="candy" onchange="updatePrice('candy')">
+            <option>Choose a Candy Tooth</option>
+            <?php fetchItems(4, $conn); ?>
+        </select>
+        <span id="candy_price"> Price: ₱0.00</span>
+        </div>
+
+        <div class="category-filter-form">
+        <label for="cake">Cake:</label>
+        <select name="cake" id="cake" onchange="updatePrice('cake')">
+            <option>Choose a Cake Tooth</option>
+            <?php fetchItems(3, $conn); ?>
+        </select> 
+        <span id="cake_price"> Price: ₱0.00</span>
+        </div>
+
+        <div class="category-filter-form">
+        <label for="pastry">Pastry:</label>
+        <select name="pastry" id="pastry" onchange="updatePrice('pastry')">
+            <option>Choose a Pastry Tooth</option>
+            <?php fetchItems(2, $conn); ?>
+        </select>
+        <span id="pastry_price"> Price: ₱0.00</span>
+        </div>
+        </div>
+
+        <div class="price-container">
+        <div class="category-filter-form">
+        <div id="set_price">Total Set Price (90%): ₱0.00</div>
+        </div>
+        </div>
+        <div class="price-container">
+        <div class="category-filter-form">
+        <input type="submit" value="Submit">
+        </div>
+        </div>
     </form>
 
     <?php mysqli_close($conn); ?>

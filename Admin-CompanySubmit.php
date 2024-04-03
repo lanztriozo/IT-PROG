@@ -1,4 +1,5 @@
 <?php
+session_start();
 // Establishing a database connection
 $servername = "localhost";
 $username = "root";
@@ -26,8 +27,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // Executing the statement
     if ($stmt->execute() === TRUE) {
-        echo "New Company: " . $companyName . "<br>";
-        echo '<a href="Admin-CompanyCreation.php">Return to Company Creation</a>';
+        $_SESSION['companycreation'] = true;
+        //echo "New Company: " . $companyName . "<br>";
+        //echo '<a href="Admin-CompanyCreation.php">Return to Company Creation</a>';
+        header("Location: Admin-CompanyCreation.php");
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
