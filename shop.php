@@ -12,7 +12,14 @@
         text-align: center;
         max-width: 600px;
         width: 100%;
-        margin-left: 0px;
+        margin-left: 13px;
+        margin-bottom: 10px;
+    }
+    .user-container { /*TWhere navbar is contained so that it doesn't take up entire page */
+        text-align: center;
+        max-width: 600px;
+        width: 100%;
+        margin-left: 13px;
         margin-bottom: 10px;
     }
     
@@ -51,10 +58,19 @@
             </nav>
         </div>
     </div>
+    <div class="user-container">
+        <?php
+        session_start();
+        if(isset($_SESSION['user_ID'])) {
+            echo "User ID: " . $_SESSION['user_ID'];
+        } else {
+            echo "User ID not set";
+        }
+        ?>
+    </div>
     <?php
     // get user id
-    session_start();
-    $userid = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
+    $userid = isset($_SESSION['user_ID']) ? $_SESSION['user_ID'] : 0;
     //$userid = 2;
     
     // Database connection parameters

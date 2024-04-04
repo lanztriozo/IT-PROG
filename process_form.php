@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-        $userid = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
+        $userid = isset($_SESSION['user_ID']) ? $_SESSION['user_ID'] : 0;
 
 $host = "localhost";
 $username = "root";

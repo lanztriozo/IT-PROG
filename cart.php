@@ -18,47 +18,43 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Function to handle checkout process
-function checkout($userID, $totalPrice, $conn) {
-    // Clear the cart
-    $clearCartSQL = "DELETE FROM cart WHERE user_ID = $userID";
-    $conn->query($clearCartSQL);
-
-    // Subtract the purchased quantity from item_stock
-    $updateStockSQL = "UPDATE item JOIN catalog ON item.item_ID = catalog.item_ID 
-                       JOIN cart ON catalog.catalog_ID = cart.catalog_ID 
-                       SET item.item_stock = item.item_stock - cart.quantity 
-                       WHERE cart.user_ID = $userID";
-    $conn->query($updateStockSQL);
-
-    // Remove associated set
-    $removeSetSQL = "DELETE FROM cart WHERE catalog_ID IN (SELECT set_ID FROM `set`)";
-    $conn->query($removeSetSQL);
-
-    // Subtract the total price from user's funds
-    $updateFundsSQL = "UPDATE user SET user_funds = user_funds - $totalPrice WHERE user_ID = $userID";
-    $conn->query($updateFundsSQL);
-}
-
-// Check if checkout button is clicked
-if (isset($_POST['checkout'])) {
-    // Fetch total price and user ID
-    $userID = $_SESSION['user_ID'];
-    $totalPrice = $_POST['total_price'];
-
-    // Call checkout function
-    checkout($userID, $totalPrice, $conn);
-}
-
-// Fetch cart items and user's funds for the logged-in user
+// Fetch user funds
 $userID = $_SESSION['user_ID'];
-$cartSQL = "SELECT item.item_name, item.item_price, cart.quantity, cart.user_ID FROM cart JOIN catalog ON cart.catalog_ID = catalog.catalog_ID JOIN item ON catalog.item_ID = item.item_ID WHERE cart.user_ID = $userID";
-$cartResult = $conn->query($cartSQL);
+$userFundsSQL = "SELECT user_funds FROM user WHERE user_ID = $userID";
+$userFundsResult = $conn->query($userFundsSQL);
+$userFunds = 0;
+if ($userFundsResult->num_rows > 0) {
+    $userFunds = $userFundsResult->fetch_assoc()["user_funds"];
+}
 
-$userSQL = "SELECT user_funds FROM user WHERE user_ID = $userID";
-$userResult = $conn->query($userSQL);
-$userRow = $userResult->fetch_assoc();
-$userFunds = $userRow["user_funds"];
+// Fetch cart items for the logged-in user, including set items
+$cartSQL = "SELECT 
+                CASE 
+                    WHEN item.item_name IS NOT NULL THEN item.item_name
+                    ELSE CONCAT_WS(', ', 
+                            (SELECT item_name FROM item WHERE item_ID = chocolate.chocolate_item_ID),
+                            (SELECT item_name FROM item WHERE item_ID = pastry.pastry_item_ID),
+                            (SELECT item_name FROM item WHERE item_ID = cake.cake_item_ID),
+                            (SELECT item_name FROM item WHERE item_ID = candy.candy_item_ID)
+                         )
+                END AS item_name,
+                CASE 
+                    WHEN item.item_price IS NOT NULL THEN item.item_price
+                    ELSE `set`.set_price
+                END AS item_price,
+                cart.quantity, 
+                cart.user_ID 
+            FROM cart 
+            JOIN (catalog 
+                LEFT JOIN item ON catalog.item_ID = item.item_ID 
+                LEFT JOIN `set` ON catalog.set_ID = `set`.set_ID 
+                LEFT JOIN chocolate ON `set`.chocolate_item_ID = chocolate.chocolate_item_ID
+                LEFT JOIN pastry ON `set`.pastry_item_ID = pastry.pastry_item_ID
+                LEFT JOIN cake ON `set`.cake_item_ID = cake.cake_item_ID
+                LEFT JOIN candy ON `set`.candy_item_ID = candy.candy_item_ID
+            ) ON cart.catalog_ID = catalog.catalog_ID 
+            WHERE cart.user_ID = $userID";
+$cartResult = $conn->query($cartSQL);
 
 // Initialize total price variable
 $totalPrice = 0;
@@ -80,13 +76,59 @@ if ($cartResult->num_rows > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cart</title>
-    <!-- Link the external CSS file -->
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+        background-color: #f0f5f9; /* Pastel Blue Background */
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    .container { /*TWhere navbar is contained so that it doesn't take up entire page */
+        text-align: center;
+        max-width: 600px;
+        width: 100%;
+        margin-left: 450px;
+        margin-top: 40px;
+    }
+    
+    .navbar { /*Navigation Bar for Home, Shop, Set, Cart */
+        text-align: center;
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        font-size: 16px; 
+        font-weight: 700; 
+        line-height: 25px; 
+        background-color: #fa89d1;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        border-radius: 50px;
+        margin-top: 10px; 
+    }
+
+    nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    nav a {
+        text-decoration: none;
+        margin: 0 15px; 
+        padding: 10px;
+    }
+    </style>
 </head>
 <body>
-<header>
-    <h1>Shopping Cart</h1>
 <main>
+<div class ="container">
+        <div class="navbar">
+            <nav>
+                <a href="home.php">Home</a>
+                <a href="shop.php">Shop</a>
+                <a href="set.php">Set</a>
+                <a href="cart.php">Cart</a>
+            </nav>
+        </div>
+    </div>
     <h2>My Cart</h2>
     <?php
     if (!empty($cartItems)) {
@@ -106,12 +148,14 @@ if ($cartResult->num_rows > 0) {
         }
         echo '</table>';
 
-        // Display user's funds and total price of the cart
-        echo '<p>User Funds: $' . $userFunds . '</p>';
+        // Display total price
         echo '<p>Total Price: $' . $totalPrice . '</p>';
 
+        // Display user funds
+        echo '<p>Your Funds: $' . $userFunds . '</p>';
+
         // Checkout button
-        echo '<form method="post" action="">';
+        echo '<form method="post" action="checkout.php">';
         echo '<input type="hidden" name="total_price" value="' . $totalPrice . '">';
         echo '<button type="submit" class="checkout-button" name="checkout">Checkout</button>';
         echo '</form>';

@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user = $result->fetch_assoc();
         session_start();
         if ($user['user_admin'] == 'N') {
-            $_SESSION['user_id'] = $result->fetch_assoc()['user_id'];
+            $_SESSION['user_id'] = $user['user_id'];
             header("Location: home.php");
             exit();
         } elseif ($user['user_admin'] == 'Y') {

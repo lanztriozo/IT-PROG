@@ -67,9 +67,9 @@
         padding: 10px;
     }
 
-    .category-filter-container {
+    .set-container {
     display: flex;
-    background-color: #fa89d1;
+    background-color: #ffffff; /*White background of container*/
     margin-left: 350px;
     max-width: 800px;
     border-radius: 15px;
@@ -77,9 +77,10 @@
     margin-bottom: 20px;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
     justify-content: space-between;
+    border: 3px solid #1c4966; /* Dark Blue Border */
     }
 
-    .category-filter-form {
+    .set-form {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -87,18 +88,20 @@
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 16px; 
     font-weight: 700; 
-    line-height: 25px; 
+    line-height: 35px; 
     }
 
-    .category-filter-form label {
+    .set-form label {
     margin-bottom: 5px;
     }
 
-    .category-filter-form select, .category-filter-form input[type="submit"] {
+    .set-form select, .set-form input[type="submit"] {
     padding: 5px;
     border: none;
     border-radius: 5px;
     margin-bottom: 5px;
+    color: #f0f8fa; /*Color of button text */
+    background-color: #1c4966; /*Background of buttons */
     }
 
     .set-header {
@@ -110,13 +113,14 @@
     }
 
     .price-container {
-    background-color: #fa89d1;
+    background-color: #ffffff;
     margin-left: 525px;
     max-width: 400px;
     border-radius: 15px;
     padding: 10px;
     margin-bottom: 20px;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+    border: 3px solid #1c4966; /* Dark Blue Border */
     }
     </style>
 </head>
@@ -155,8 +159,8 @@
             }
         }
         ?>
-        <div class="category-filter-container">
-        <div class="category-filter-form">
+        <div class="set-container">
+        <div class="set-form">
         <label for="chocolate">Chocolate:</label>
         <select name="chocolate" id="chocolate" onchange="updatePrice('chocolate')">
             <option>Choose a Chocolate Tooth</option>
@@ -165,7 +169,7 @@
         <span id="chocolate_price"> Price: ₱0.00</span>
         </div>
 
-        <div class="category-filter-form">
+        <div class="set-form">
         <label for="candy">Candy:</label>
         <select name="candy" id="candy" onchange="updatePrice('candy')">
             <option>Choose a Candy Tooth</option>
@@ -174,7 +178,7 @@
         <span id="candy_price"> Price: ₱0.00</span>
         </div>
 
-        <div class="category-filter-form">
+        <div class="set-form">
         <label for="cake">Cake:</label>
         <select name="cake" id="cake" onchange="updatePrice('cake')">
             <option>Choose a Cake Tooth</option>
@@ -183,7 +187,7 @@
         <span id="cake_price"> Price: ₱0.00</span>
         </div>
 
-        <div class="category-filter-form">
+        <div class="set-form">
         <label for="pastry">Pastry:</label>
         <select name="pastry" id="pastry" onchange="updatePrice('pastry')">
             <option>Choose a Pastry Tooth</option>
@@ -194,12 +198,8 @@
         </div>
 
         <div class="price-container">
-        <div class="category-filter-form">
+        <div class="set-form">
         <div id="set_price">Total Set Price (90%): ₱0.00</div>
-        </div>
-        </div>
-        <div class="price-container">
-        <div class="category-filter-form">
         <input type="submit" value="Submit">
         </div>
         </div>

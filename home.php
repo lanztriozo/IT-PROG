@@ -81,9 +81,9 @@
 </head>
 <body>
     <div class ="container2">
-            <nav>
-                <a href="Index.php">Logout</a>
-            </nav>
+        <nav>
+            <a href="Index.php">Logout</a>
+        </nav>
     </div>
     <div class ="container">
         <div class="navbar">
@@ -96,8 +96,7 @@
         </div>
     </div>
     <div class="home-fullscreen img">
-            <img src="sweet.png" alt="logo" /> 
-        </div>
-
+        <img src="sweet.png" alt="logo" /> 
+    </div>
 </body>
 </html>
