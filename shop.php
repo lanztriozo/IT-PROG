@@ -58,17 +58,9 @@
             </nav>
         </div>
     </div>
-    <div class="user-container">
-        <?php
-        session_start();
-        if(isset($_SESSION['user_ID'])) {
-            echo "User ID: " . $_SESSION['user_ID'];
-        } else {
-            echo "User ID not set";
-        }
-        ?>
-    </div>
+
     <?php
+    session_start();
     // get user id
     $userid = isset($_SESSION['user_ID']) ? $_SESSION['user_ID'] : 0;
     //$userid = 2;
