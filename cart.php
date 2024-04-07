@@ -86,10 +86,12 @@ if ($cartResult->num_rows > 0) {
 
     .container { /*TWhere navbar is contained so that it doesn't take up entire page */
         text-align: center;
-        max-width: 600px;
-        width: 100%;
-        margin-left: 450px;
+        width: 100vw;
         margin-top: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
     }
     
     .navbar { /*Navigation Bar for Home, Shop, Set, Cart */
@@ -115,54 +117,102 @@ if ($cartResult->num_rows > 0) {
         margin: 0 15px; 
         padding: 10px;
     }
+
+    .cart-container {
+        width: 70vw;
+        height: 60vh;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 8px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+
+    .remove-from-cart-button {
+        background-color: #f44336;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .remove-from-cart-button:hover {
+        background-color: #d32f2f;
+    }
+
+    .checkout-button {
+        background-color: #eb8dc8;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin-top: 10px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
     </style>
 </head>
 <body>
 <main>
-<div class ="container">
-        <div class="navbar">
-            <nav>
-                <a href="home.php">Home</a>
-                <a href="shop.php">Shop</a>
-                <a href="set.php">Set</a>
-                <a href="cart.php">Cart</a>
-            </nav>
+
+    <div class ="container">
+            <div class="navbar">
+                <nav>
+                    <a href="home.php">Home</a>
+                    <a href="shop.php">Shop</a>
+                    <a href="set.php">Set</a>
+                    <a href="cart.php">Cart</a>
+                </nav>
+            </div>
+
+        <div class="cart-container">
+        <h2>My Cart</h2>
+        <?php
+            if (!empty($cartItems)) {
+                echo '<table>';
+                echo '<tr><th>Item Name</th><th>Price</th><th>Quantity</th><th>Remove</th></tr>';
+                foreach ($cartItems as $item) {
+                    echo '<tr>';
+                    echo '<td>' . $item["item_name"] . '</td>';
+                    echo '<td>₱' . $item["item_price"] . '</td>';
+                    echo '<td>' . $item["quantity"] . '</td>';
+                    echo '<td><form method="post" action="remove_from_cart.php">';
+                    echo '<input type="hidden" name="user_ID" value="' . $item["user_ID"] . '">';
+                    echo '<input type="hidden" name="item_name" value="' . $item["item_name"] . '">';
+                    echo '<button type="submit" class="remove-from-cart-button" name="remove">Remove</button>';
+                    echo '</form></td>';
+                    echo '</tr>';
+                }
+                echo '</table>';
+
+                // Display total price
+                echo '<p>Total Price: ₱' . $totalPrice . '</p>';
+
+                // Display user funds
+                echo '<p>Your Funds: ₱' . $userFunds . '</p>';
+
+                // Checkout button
+                echo '<form method="post" action="checkout.php">';
+                echo '<input type="hidden" name="total_price" value="' . $totalPrice . '">';
+                echo '<button type="submit" class="checkout-button" name="checkout">Checkout</button>';
+                echo '</form>';
+            } else {
+                echo '<p>Your cart is empty.</p>';
+            }
+            ?>
         </div>
     </div>
-    <h2>My Cart</h2>
-    <?php
-    if (!empty($cartItems)) {
-        echo '<table>';
-        echo '<tr><th>Item Name</th><th>Price</th><th>Quantity</th><th>Remove</th></tr>';
-        foreach ($cartItems as $item) {
-            echo '<tr>';
-            echo '<td>' . $item["item_name"] . '</td>';
-            echo '<td>$' . $item["item_price"] . '</td>';
-            echo '<td>' . $item["quantity"] . '</td>';
-            echo '<td><form method="post" action="remove_from_cart.php">';
-            echo '<input type="hidden" name="user_ID" value="' . $item["user_ID"] . '">';
-            echo '<input type="hidden" name="item_name" value="' . $item["item_name"] . '">';
-            echo '<button type="submit" class="remove-from-cart-button" name="remove">Remove</button>';
-            echo '</form></td>';
-            echo '</tr>';
-        }
-        echo '</table>';
-
-        // Display total price
-        echo '<p>Total Price: $' . $totalPrice . '</p>';
-
-        // Display user funds
-        echo '<p>Your Funds: $' . $userFunds . '</p>';
-
-        // Checkout button
-        echo '<form method="post" action="checkout.php">';
-        echo '<input type="hidden" name="total_price" value="' . $totalPrice . '">';
-        echo '<button type="submit" class="checkout-button" name="checkout">Checkout</button>';
-        echo '</form>';
-    } else {
-        echo '<p>Your cart is empty.</p>';
-    }
-    ?>
 </main>
 <footer>
     <p>&copy; 2024 Online Candy Shop</p>

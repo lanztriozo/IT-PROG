@@ -45,6 +45,39 @@
         text-decoration: none;
         margin: 0 15px; 
         padding: 10px;
+        font-weight: bold;
+    }
+
+    .category-button {
+    margin-right: 10px;
+    background-color: #eb8dc8;
+    color: black; 
+    border: 1px solid #eb8dc8; 
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    text-align: center;
+    }
+
+    .item-box {
+    width: 22%;
+    background-color: #ffffff; 
+    border: 2px solid #eb8dc8; 
+    border-radius: 8px;
+    margin: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    }
+
+    .add-to-cart-button {
+    background-color: #eb8dc8; 
+    color: black;
+    border: 1px solid #eb8dc8; 
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    text-align: center;
     }
 </style>
 <body>
@@ -58,9 +91,12 @@
             </nav>
         </div>
     </div>
-
+    <div class="user-container">
+        <?php
+        session_start();
+        ?>
+    </div>
     <?php
-    session_start();
     // get user id
     $userid = isset($_SESSION['user_ID']) ? $_SESSION['user_ID'] : 0;
     //$userid = 2;
@@ -122,7 +158,7 @@
                     <h3>' . $row["item_name"] . '</h3>
                     <p>' . $row["item_desc"] . '</p>
                     <p>Stock: ' . $row["item_stock"] . '</p>
-                    <p>Price: $' . $row["item_price"] . '</p>
+                    <p>Price: ₱' . $row["item_price"] . '</p>
                     <input type="number" class="quantity-input" placeholder="Quantity" min="1" max="' . $row["item_stock"] . '" id="quantity' . $row["item_ID"] . '">
                     <button class="add-to-cart-button" onclick="addToCart(' . $row["item_ID"] . ', ' . $row["item_stock"] . ', '. $userid.')">Add to Cart</button>
                     <div class="error-message" id="error' . $row["item_ID"] . '"></div>

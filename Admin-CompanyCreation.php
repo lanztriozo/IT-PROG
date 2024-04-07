@@ -15,7 +15,6 @@
         text-align: center;
         max-width: 800px;
         width: 100%;
-        margin-left: 365px;
     }
     
     .navbar { /*Navigation Bar for Home, Shop, Set, Cart */
@@ -53,15 +52,14 @@
     }
 
     .company-container {
-    display: flex;
-    background-color: #fa89d1;
-    margin-left: 650px;
-    max-width: 170px;
-    border-radius: 15px;
-    padding: 10px;
-    margin-bottom: 20px;
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
-    justify-content: space-between;
+        display: flex;
+        background-color: #fa89d1;
+        max-width: 170px;
+        border-radius: 15px;
+        padding: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+        justify-content: space-between;
     }
 
     .company-form {
@@ -93,38 +91,48 @@
     font-weight: bold;
     margin-bottom: 15px;
     }
+
+    .add-company-container {
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
     </style>
 </head>
 <body>
-<div class ="container">
-        <div class="navbar">
-            <nav>
-                <a href="adminhome.php">Home</a>
-                <a href="Admin-CompanyCreation.php">Create Company</a>
-                <a href="Admin-ItemCreation.php">Create Items</a>
-                <a href="Admin-ItemListing.php">Update Items</a>
-                <a href="Admin-UserListing.php">Update Users</a>
-            </nav>
+    <div class="add-company-container">
+        <div class ="container">
+            <div class="navbar">
+                <nav>
+                    <a href="adminhome.php">Home</a>
+                    <a href="Admin-CompanyCreation.php">Create Company</a>
+                    <a href="Admin-ItemCreation.php">Create Items</a>
+                    <a href="Admin-ItemListing.php">Update Items</a>
+                    <a href="Admin-UserListing.php">Update Users</a>
+                </nav>
+            </div>
         </div>
-    </div>
-    <div class="admin-header">
-    <h2>Add New Company</h2>
-    </div>
-    <div class="company-container">
-     <div class="company-form">
-    <form action="Admin-CompanySubmit.php" method="post">
-        <label for="companyName">Company Name:</label><br>
-        <input type="text" id="companyName" name="companyName" required><br><br>
-        <?php
-            session_start();//session will be what tracks the status of a login, whether it failed or not.
-            if (isset($_SESSION['companycreation']) && $_SESSION['companycreation']) {
-                echo '<div style="color: black;">Company Created</div>';
-                unset($_SESSION['companycreation']);
-            }
-        ?>
-        <input type="submit" value="Submit">
-    </form>
-    </div>  
+        <div class="admin-header">
+        <h2>Add New Company</h2>
+        </div>
+        <div class="company-container">
+            <div class="company-form">
+                <form action="Admin-CompanySubmit.php" method="post">
+                    <label for="companyName">Company Name:</label><br>
+                    <input type="text" id="companyName" name="companyName" required><br><br>
+                    <?php
+                        session_start();//session will be what tracks the status of a login, whether it failed or not.
+                        if (isset($_SESSION['companycreation']) && $_SESSION['companycreation']) {
+                            echo '<div style="color: black;">Company Created</div>';
+                            unset($_SESSION['companycreation']);
+                        }
+                    ?>
+                    <input type="submit" value="Submit">
+                </form>
+            </div>  
+        </div>
     </div>
 </body>
 </html>
