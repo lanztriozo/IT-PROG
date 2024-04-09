@@ -1,3 +1,4 @@
+<?php session_start();?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -103,6 +104,35 @@
             display: inline-block;
             font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
         }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -110,11 +140,21 @@
         <div class="nav-container">
                 <div class="navbar">
                     <nav>
-                        <a href="adminhome.php">Home</a>
+                    <a href="home.php">Home</a>
+                    <a href="shop.php">Shop</a>
+                    <a href="set.php">Set</a>
+                    <a href="cart.php">Cart</a>
+                    <?php if ($_SESSION['user_admin'] == 'Y'): ?>
+                    <div class="dropdown">
+                        <a href="#" class="dropbtn">Admin</a>
+                        <div class="dropdown-content">
                         <a href="Admin-CompanyCreation.php">Create Company</a>
                         <a href="Admin-ItemCreation.php">Create Items</a>
                         <a href="Admin-ItemListing.php">Update Items</a>
                         <a href="Admin-UserListing.php">Update Users</a>
+                    </div>
+                </div>
+                <?php endif; ?>
                     </nav>
                 </div>
         </div>

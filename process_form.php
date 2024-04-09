@@ -39,7 +39,7 @@ $latest_set_id = $latest_set_row['latest_set_id'];
 $new_set_id = $latest_set_id + 1;
 
 // Insert a new instance of the Set with the new_set_id
-mysqli_query($conn, "INSERT INTO `Set` (set_id, chocolate_item_id, pastry_item_id, cake_item_id, candy_item_id, set_price) VALUES ($new_set_id, $chocolate_id, $pastry_id, $cake_id, $candy_id, $set_price)");
+mysqli_query($conn, "INSERT INTO `Set` (set_id, item_ID_1, item_ID_2, item_ID_3, item_ID_4, set_price) VALUES ($new_set_id, $chocolate_id, $pastry_id, $cake_id, $candy_id, $set_price)");
 
 // Insert a new instance of Catalog with the created Set
 $latest_catalog_query = mysqli_query($conn, "SELECT MAX(catalog_id) AS latest_catalog_id FROM Catalog");

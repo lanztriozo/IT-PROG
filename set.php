@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <html>
 <head>
     <title>Set Creation</title>
@@ -135,6 +136,35 @@
         flex-direction: column;
         align-items: center;
     }
+
+    .dropdown {
+    position: relative;
+    display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        }
+
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-content a:hover {
+        background-color: #f1f1f1;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }  
     </style>
 </head>
 <body>
@@ -142,10 +172,21 @@
         <div class ="container">
             <div class="navbar">
                 <nav>
-                    <a href="home.php">Home</a>
-                    <a href="shop.php">Shop</a>
-                    <a href="set.php">Set</a>
-                    <a href="cart.php">Cart</a>
+                <a href="home.php">Home</a>
+                <a href="shop.php">Shop</a>
+                <a href="set.php">Set</a>
+                <a href="cart.php">Cart</a>
+                <?php if ($_SESSION['user_admin'] == 'Y'): ?>
+                <div class="dropdown">
+                    <a href="#" class="dropbtn">Admin</a>
+                    <div class="dropdown-content">
+                        <a href="Admin-CompanyCreation.php">Create Company</a>
+                        <a href="Admin-ItemCreation.php">Create Items</a>
+                        <a href="Admin-ItemListing.php">Update Items</a>
+                        <a href="Admin-UserListing.php">Update Users</a>
+                    </div>
+                </div>
+                <?php endif; ?>
                 </nav>
             </div>
         </div>
@@ -167,7 +208,7 @@
             }
 
             function fetchItems($category, $conn) {
-                $result = mysqli_query($conn, "SELECT item_id, item_name, item_price FROM Item WHERE category_id = $category AND item_stock > 0");
+                $result = mysqli_query($conn, "SELECT item_id, item_name, item_price FROM item WHERE category = $category AND item_stock > 0");
                 while ($row = mysqli_fetch_assoc($result)) {
                     echo "<option value='{$row['item_id']}' data-price='{$row['item_price']}'>{$row['item_name']}</option>";
                 }

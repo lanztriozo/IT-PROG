@@ -1,10 +1,10 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confectionary Items</title>
-    <!-- Link the external CSS file -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <style>
@@ -15,6 +15,7 @@
         margin-left: 13px;
         margin-bottom: 10px;
     }
+    
     .user-container { /*TWhere navbar is contained so that it doesn't take up entire page */
         text-align: center;
         max-width: 600px;
@@ -24,6 +25,8 @@
     }
     
     .navbar { /*Navigation Bar for Home, Shop, Set, Cart */
+        position: fixed;
+        z-index: 1000;
         text-align: center;
         font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
         font-size: 16px; 
@@ -32,7 +35,8 @@
         background-color: #fa89d1;
         box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
         border-radius: 50px;
-        margin-top: 40px; 
+        margin-left: 80px;
+        margin-top: 20px;
     }
 
     nav {
@@ -49,6 +53,8 @@
     }
 
     .category-button {
+    margin-top: 40px;
+    margin-bottom: 50px;
     margin-right: 10px;
     background-color: #eb8dc8;
     color: black; 
@@ -59,8 +65,17 @@
     text-align: center;
     }
 
+    .item-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 80%;
+    margin-top: 80px;
+    overflow-y: auto;
+    }
+
     .item-box {
-    width: 22%;
+    width: 20%;
     background-color: #ffffff; 
     border: 2px solid #eb8dc8; 
     border-radius: 8px;
@@ -68,6 +83,7 @@
     padding: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
+    overflow-y: auto;
     }
 
     .add-to-cart-button {
@@ -79,6 +95,35 @@
     cursor: pointer;
     text-align: center;
     }
+
+    .dropdown {
+    position: relative;
+    display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        }
+
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-content a:hover {
+        background-color: #f1f1f1;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }  
 </style>
 <body>
     <div class ="container">
@@ -88,13 +133,21 @@
                 <a href="shop.php">Shop</a>
                 <a href="set.php">Set</a>
                 <a href="cart.php">Cart</a>
+                <?php if ($_SESSION['user_admin'] == 'Y'): ?>
+                <div class="dropdown">
+                    <a href="#" class="dropbtn">Admin</a>
+                    <div class="dropdown-content">
+                        <a href="Admin-CompanyCreation.php">Create Company</a>
+                        <a href="Admin-ItemCreation.php">Create Items</a>
+                        <a href="Admin-ItemListing.php">Update Items</a>
+                        <a href="Admin-UserListing.php">Update Users</a>
+                    </div>
+                </div>
+                <?php endif; ?>
             </nav>
         </div>
     </div>
     <div class="user-container">
-        <?php
-        session_start();
-        ?>
     </div>
     <?php
     // get user id
@@ -115,39 +168,64 @@
         die("Connection failed: " . $conn->connect_error);
     }
 
-    // Fetch categories for buttons
-    $categoryQuery = "SELECT category_ID, category_name FROM category";
+    $categoryQuery = "SELECT DISTINCT category FROM item"; // Use DISTINCT to get unique categories only
     $categoryResult = $conn->query($categoryQuery);
     $categories = array();
 
-    if ($categoryResult->num_rows > 0) {
-        while ($row = $categoryResult->fetch_assoc()) {
-            $categories[$row['category_ID']] = $row['category_name'];
+    if ($categoryResult) {
+        if ($categoryResult->num_rows > 0) {
+            while ($row = $categoryResult->fetch_assoc()) {
+                $categories[] = $row['category']; // Append category to the array
+            }
+        } else {
+            echo "No categories found";
         }
+    } else {
+        echo "Error executing category query: " . $conn->error;
     }
+
+    // Remove duplicates from the array
+    $uniqueCategories = array_unique($categories);
 
     // Display category buttons
     echo '<div class="category-buttons">
-            <form method="get" action="">';
+        <form method="get" action="">'; // Form for submitting selected category
 
-    foreach ($categories as $categoryID => $categoryName) {
-        echo '<button class="category-button" type="submit" name="category" value="' . $categoryID . '">' . $categoryName . '</button>';
+    foreach ($uniqueCategories as $category) {
+        echo '<button class="category-button" type="submit" name="category" value="' . $category . '">' . $category . '</button>';
     }
 
     // Button for all items
     echo '<button class="category-button" type="submit" name="category" value="">All Items</button>';
 
     echo '</form>
-        </div>';
+            </div>';
 
-    // Handle category filter
     $selectedCategory = isset($_GET['category']) ? $_GET['category'] : null;
-    $categoryFilter = $selectedCategory ? "WHERE category_ID = $selectedCategory" : "";
+    $categoryFilter = "";
+    $parameters = array();
+    
+    if ($selectedCategory) {
+        $categoryFilter = " WHERE category = ?";
+        $parameters[] = $selectedCategory;
+    }
     
     // SQL query to retrieve items with category filter
-    $sql = "SELECT item_ID, item_name, item_desc, item_stock, item_price FROM item $categoryFilter";
-
-    $result = $conn->query($sql);
+    $sql = "SELECT item_ID, item_name, item_desc, item_stock, item_price FROM item" . $categoryFilter;
+    
+    // Prepare the SQL statement
+    $stmt = $conn->prepare($sql);
+    
+    // Bind parameters if necessary
+    if ($selectedCategory) {
+        $stmt->bind_param("s", $selectedCategory); // Assuming category is a string, change "s" if it's a different data type
+    }
+    
+    // Execute the statement
+    $stmt->execute();
+    
+    // Get the result
+    $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
         // Display items in separate boxes
