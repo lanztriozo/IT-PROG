@@ -32,10 +32,10 @@ $cartSQL = "SELECT
                 CASE 
                     WHEN item.item_name IS NOT NULL THEN item.item_name
                     ELSE CONCAT_WS(', ', 
-                            (SELECT item_name FROM item WHERE item_ID = chocolate.chocolate_item_ID),
-                            (SELECT item_name FROM item WHERE item_ID = pastry.pastry_item_ID),
-                            (SELECT item_name FROM item WHERE item_ID = cake.cake_item_ID),
-                            (SELECT item_name FROM item WHERE item_ID = candy.candy_item_ID)
+                            (SELECT item_name FROM item WHERE item_ID = `set`.item_ID_1),
+                            (SELECT item_name FROM item WHERE item_ID = `set`.item_ID_2),
+                            (SELECT item_name FROM item WHERE item_ID = `set`.item_ID_3),
+                            (SELECT item_name FROM item WHERE item_ID = `set`.item_ID_4)
                          )
                 END AS item_name,
                 CASE 
@@ -45,14 +45,9 @@ $cartSQL = "SELECT
                 cart.quantity, 
                 cart.user_ID 
             FROM cart 
-            JOIN (catalog 
-                LEFT JOIN item ON catalog.item_ID = item.item_ID 
-                LEFT JOIN `set` ON catalog.set_ID = `set`.set_ID 
-                LEFT JOIN chocolate ON `set`.chocolate_item_ID = chocolate.chocolate_item_ID
-                LEFT JOIN pastry ON `set`.pastry_item_ID = pastry.pastry_item_ID
-                LEFT JOIN cake ON `set`.cake_item_ID = cake.cake_item_ID
-                LEFT JOIN candy ON `set`.candy_item_ID = candy.candy_item_ID
-            ) ON cart.catalog_ID = catalog.catalog_ID 
+            LEFT JOIN catalog ON cart.catalog_ID = catalog.catalog_ID
+            LEFT JOIN item ON catalog.item_ID = item.item_ID
+            LEFT JOIN `set` ON catalog.set_ID = `set`.set_ID 
             WHERE cart.user_ID = $userID";
 $cartResult = $conn->query($cartSQL);
 
@@ -161,6 +156,35 @@ if ($cartResult->num_rows > 0) {
         cursor: pointer;
         border-radius: 4px;
     }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-content a:hover {
+        background-color: #f1f1f1;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
     </style>
 </head>
 <body>
@@ -169,10 +193,21 @@ if ($cartResult->num_rows > 0) {
     <div class ="container">
             <div class="navbar">
                 <nav>
-                    <a href="home.php">Home</a>
-                    <a href="shop.php">Shop</a>
-                    <a href="set.php">Set</a>
-                    <a href="cart.php">Cart</a>
+                <a href="home.php">Home</a>
+                <a href="shop.php">Shop</a>
+                <a href="set.php">Set</a>
+                <a href="cart.php">Cart</a>
+                <?php if ($_SESSION['user_admin'] == 'Y'): ?>
+                <div class="dropdown">
+                    <a href="#" class="dropbtn">Admin</a>
+                    <div class="dropdown-content">
+                        <a href="Admin-CompanyCreation.php">Create Company</a>
+                        <a href="Admin-ItemCreation.php">Create Items</a>
+                        <a href="Admin-ItemListing.php">Update Items</a>
+                        <a href="Admin-UserListing.php">Update Users</a>
+                    </div>
+                </div>
+                <?php endif; ?>
                 </nav>
             </div>
 

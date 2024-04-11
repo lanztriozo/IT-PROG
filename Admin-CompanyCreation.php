@@ -6,10 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add New Company</title>
     <style>
-     body {
-     margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
+    body {
+        background-color: #f0f5f9;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        width: 100vw;
+        height: 100vh;
     }
 
     .container { /*TWhere navbar is contained so that it doesn't take up entire page */
@@ -57,13 +60,17 @@
         background-color: #fa89d1;
         max-width: 170px;
         border-radius: 15px;
-        padding: 10px;
+        /*padding: 10px;*/
         margin-bottom: 20px;
         box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
         justify-content: space-between;
     }
 
     .company-form {
+    border: 2px solid #eb8dc8; 
+    border-radius: 15px;
+    padding: 10px;
+    background-color: #ffffff;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -78,11 +85,18 @@
     margin-bottom: 5px;
     }
 
-    .company-form select, .company-form input[type="submit"] {
-    padding: 5px;
-    border: none;
-    border-radius: 5px;
-    margin-bottom: 5px;
+    .submit-btn {
+        background-color: #5071e6;
+        color: white;
+        border: none;
+        padding: 8px 10px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 15px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 4px;
     }
 
     .admin-header {
@@ -169,7 +183,7 @@
                             unset($_SESSION['companycreation']);
                         }
                     ?>
-                    <input type="submit" value="Submit">
+                    <input class="submit-btn" type="submit" value="Submit">
                 </form>
             </div>  
         </div>

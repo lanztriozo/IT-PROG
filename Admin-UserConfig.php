@@ -1,3 +1,4 @@
+<?php session_start();?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,10 +7,12 @@
     <title>Delete User</title>
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-color: #f0f5f9;
             margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            width: 100vw;
+            height: 100vh;
         }
 
         .container {
@@ -20,19 +23,112 @@
         }
 
         .item-box {
-            border: 1px solid #ccc;
+            border: 2px solid #eb8dc8;
+            border-radius: 5px;
             padding: 10px;
             margin: 10px;
             width: 300px;
             display: inline-block;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            background-color: #FFFFFFFF;
         }
 
         .btn {
             margin-right: 5px;
         }
+
+        .nav-container { /*TWhere navbar is contained so that it doesn't take up entire page */
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .navbar { /*Navigation Bar for Home, Shop, Set, Cart */
+            text-align: center;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            font-size: 16px; 
+            font-weight: 700; 
+            line-height: 25px; 
+            background-color: #fa89d1;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            border-radius: 50px;
+            margin-top: 40px; 
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            margin: 0 15px; 
+            padding: 10px;
+        }
+
+        .user-page-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
     </style>
 </head>
 <body>
+<div class="user-page-container">
+        <div class="nav-container">
+                <div class="navbar">
+                    <nav>
+                    <a href="home.php">Home</a>
+                    <a href="shop.php">Shop</a>
+                    <a href="set.php">Set</a>
+                    <a href="cart.php">Cart</a>
+                    <?php if ($_SESSION['user_admin'] == 'Y'): ?>
+                    <div class="dropdown">
+                        <a href="#" class="dropbtn">Admin</a>
+                        <div class="dropdown-content">
+                        <a href="Admin-CompanyCreation.php">Create Company</a>
+                        <a href="Admin-ItemCreation.php">Create Items</a>
+                        <a href="Admin-ItemListing.php">Update Items</a>
+                        <a href="Admin-UserListing.php">Update Users</a>
+                    </div>
+                </div>
+                <?php endif; ?>
+                    </nav>
+                </div>
+        </div>
     <div class="container">
         <?php
         // Database connection

@@ -7,10 +7,12 @@
     <title>Admin List of Users</title>
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-color: #f0f5f9;
             margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            width: 100vw;
+            height: 100vh;
         }
 
         .container {
@@ -26,6 +28,7 @@
             margin: 10px;
             width: 300px;
             float: left;
+            background-color: #ffffff;
         }
 
         .update-btn {
