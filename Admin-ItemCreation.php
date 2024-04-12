@@ -131,6 +131,7 @@
                 <a href="shop.php">Shop</a>
                 <a href="set.php">Set</a>
                 <a href="cart.php">Cart</a>
+                <a href="orders.php">Orders</a>
                 <?php if ($_SESSION['user_admin'] == 'Y'): ?>
                 <div class="dropdown">
                     <a href="#" class="dropbtn">Admin</a>
@@ -139,6 +140,7 @@
                         <a href="Admin-ItemCreation.php">Create Items</a>
                         <a href="Admin-ItemListing.php">Update Items</a>
                         <a href="Admin-UserListing.php">Update Users</a>
+                        <a href="Admin-UserListing.php">Order History</a>
                     </div>
                 </div>
                 <?php endif; ?>
@@ -174,7 +176,6 @@
         <label for="company">Company:</label><br>
         <select id="company" name="company">
             <?php
-            // Database connection
             $servername = "localhost";
             $username   = "root";
             $password   = "";
@@ -182,7 +183,6 @@
 
             $conn = new mysqli($servername, $username, $password, $database);
 
-            // Check connection
             if ($conn->connect_error) {
                 die("Connection failed: " . $conn->connect_error);
             }
@@ -197,9 +197,13 @@
                     echo "<option value='" . $row["company_ID"] . "'>" . $row["company_name"] . "</option>";
                 }
             }
-
-            // Close connection
             $conn->close();
+            ?>
+            <?php
+                if (isset($_SESSION['itemcreation']) && $_SESSION['itemcreation']) {
+                echo '<div style="color: black;">Item Created</div>';
+                unset($_SESSION['itemcreation']);
+                }
             ?>
         </select><br><br>
 

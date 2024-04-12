@@ -46,11 +46,12 @@ $latest_catalog_query = mysqli_query($conn, "SELECT MAX(catalog_id) AS latest_ca
 $latest_catalog_row = mysqli_fetch_assoc($latest_catalog_query);
 $latest_catalog_id = $latest_catalog_row['latest_catalog_id'];
 $new_catalog_id = $latest_catalog_id + 1;
+$quantity = 1;
 
 mysqli_query($conn, "INSERT INTO Catalog (catalog_id, set_id) VALUES ($new_catalog_id, $new_set_id)");
 
 // Insert a new instance into Cart with user_id and catalog_id
-mysqli_query($conn, "INSERT INTO Cart (user_ID, catalog_id) VALUES ($userid, $new_catalog_id)");
+mysqli_query($conn, "INSERT INTO Cart (user_ID, catalog_id, quantity) VALUES ($userid, $new_catalog_id, $quantity)");
 
 // Close the database connection
 mysqli_close($conn);

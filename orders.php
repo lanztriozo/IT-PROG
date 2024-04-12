@@ -151,6 +151,7 @@
     </div>
     <div class="user-container">
     </div>
+    <h2>TO BE CHANGED ORDERS WILL USE SAME FORMAT and LAYOUT AS SHOP</h2>
     <?php
     // get user id
     $userid = isset($_SESSION['user_ID']) ? $_SESSION['user_ID'] : 0;
@@ -187,18 +188,10 @@
     $uniqueCategories = array_unique($categories);
 
     // Display category buttons
-    echo '<div class="category-buttons">
-        <form method="get" action="">'; // Form for submitting selected category
+    echo '<div class="category-buttons">';
 
-    foreach ($uniqueCategories as $category) {
-        echo '<button class="category-button" type="submit" name="category" value="' . $category . '">' . $category . '</button>';
-    }
-
-    // Button for all items
-    echo '<button class="category-button" type="submit" name="category" value="">All Items</button>';
-
-    echo '</form>
-            </div>';
+    echo 'TO BE CHANGED, ORDERS WILL USE SAME FORMAT and LAYOUT AS SHOP';
+    echo  '</div>';
 
     $selectedCategory = isset($_GET['category']) ? $_GET['category'] : null;
     $categoryFilter = "";

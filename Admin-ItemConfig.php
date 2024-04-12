@@ -33,8 +33,18 @@
             background-color: #FFFFFFFF;
         }
 
-        .btn {
-            margin-right: 5px;
+        .update-btn {
+        background-color: #5071e6;
+        color: white;
+        border: none;
+        padding: 8px 10px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 15px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 4px;
         }
 
         .nav-container { /*TWhere navbar is contained so that it doesn't take up entire page */
@@ -115,6 +125,7 @@
                     <a href="shop.php">Shop</a>
                     <a href="set.php">Set</a>
                     <a href="cart.php">Cart</a>
+                    <a href="orders.php">Orders</a>
                     <?php if ($_SESSION['user_admin'] == 'Y'): ?>
                     <div class="dropdown">
                         <a href="#" class="dropbtn">Admin</a>
@@ -123,6 +134,7 @@
                         <a href="Admin-ItemCreation.php">Create Items</a>
                         <a href="Admin-ItemListing.php">Update Items</a>
                         <a href="Admin-UserListing.php">Update Users</a>
+                        <a href="Admin-UserListing.php">Order History</a>
                     </div>
                 </div>
                 <?php endif; ?>
@@ -245,7 +257,7 @@
             }
         }
             
-        echo '<input type="submit" name="update_submit" value="Update">';
+        echo '<input type="submit" class="update-btn" name="update_submit" value="Update">';
         
         echo '</form>';
             

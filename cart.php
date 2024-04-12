@@ -43,7 +43,8 @@ $cartSQL = "SELECT
                     ELSE `set`.set_price
                 END AS item_price,
                 cart.quantity, 
-                cart.user_ID 
+                cart.user_ID,
+                cart.catalog_ID 
             FROM cart 
             LEFT JOIN catalog ON cart.catalog_ID = catalog.catalog_ID
             LEFT JOIN item ON catalog.item_ID = item.item_ID
@@ -59,6 +60,7 @@ $cartItems = array();
 if ($cartResult->num_rows > 0) {
     while ($row = $cartResult->fetch_assoc()) {
         $cartItems[] = $row;
+        $catalog_ID = $row['catalog_ID'];
         // Calculate total price
         $totalPrice += $row["item_price"] * $row["quantity"];
     }
@@ -197,6 +199,7 @@ if ($cartResult->num_rows > 0) {
                 <a href="shop.php">Shop</a>
                 <a href="set.php">Set</a>
                 <a href="cart.php">Cart</a>
+                <a href="orders.php">Orders</a>
                 <?php if ($_SESSION['user_admin'] == 'Y'): ?>
                 <div class="dropdown">
                     <a href="#" class="dropbtn">Admin</a>
@@ -205,6 +208,7 @@ if ($cartResult->num_rows > 0) {
                         <a href="Admin-ItemCreation.php">Create Items</a>
                         <a href="Admin-ItemListing.php">Update Items</a>
                         <a href="Admin-UserListing.php">Update Users</a>
+                        <a href="Admin-UserListing.php">Order History</a>
                     </div>
                 </div>
                 <?php endif; ?>
@@ -224,7 +228,7 @@ if ($cartResult->num_rows > 0) {
                     echo '<td>' . $item["quantity"] . '</td>';
                     echo '<td><form method="post" action="remove_from_cart.php">';
                     echo '<input type="hidden" name="user_ID" value="' . $item["user_ID"] . '">';
-                    echo '<input type="hidden" name="item_name" value="' . $item["item_name"] . '">';
+                    echo '<input type="hidden" name="catalog_ID" value="' . $catalog_ID . '">';
                     echo '<button type="submit" class="remove-from-cart-button" name="remove">Remove</button>';
                     echo '</form></td>';
                     echo '</tr>';
@@ -240,8 +244,12 @@ if ($cartResult->num_rows > 0) {
                 // Checkout button
                 echo '<form method="post" action="checkout.php">';
                 echo '<input type="hidden" name="total_price" value="' . $totalPrice . '">';
+                echo '<input type="hidden" name="catalog_ID" value="' . $catalog_ID . '">';
                 echo '<button type="submit" class="checkout-button" name="checkout">Checkout</button>';
                 echo '</form>';
+            } else if (isset($_SESSION['cartpurchase']) && $_SESSION['cartpurchase']) {
+                    echo '<div style="color: green;">Successful Purchase</div>';
+                    unset($_SESSION['cartpurchase']);
             } else {
                 echo '<p>Your cart is empty.</p>';
             }

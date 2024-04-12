@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Configuration</title>
+    <title>Admin List of Users</title>
     <style>
         body {
             background-color: #f0f5f9;
@@ -23,28 +23,40 @@
         }
 
         .item-box {
-            border: 2px solid #eb8dc8;
-            border-radius: 5px;
+            border: 1px solid #ccc;
             padding: 10px;
             margin: 10px;
             width: 300px;
-            display: inline-block;
-            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-            background-color: #FFFFFFFF;
+            float: left;
+            background-color: #ffffff;
         }
 
         .update-btn {
-        background-color: #5071e6;
-        color: white;
-        border: none;
-        padding: 8px 10px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 15px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 4px;
+            background-color: #34D52F;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .delete-btn {
+            background-color: #DE4A38;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
         }
 
         .nav-container { /*TWhere navbar is contained so that it doesn't take up entire page */
@@ -86,6 +98,16 @@
             flex-direction: column;
         }
 
+        .item-box {
+            border: 2px solid #eb8dc8;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px;
+            width: 300px;
+            display: inline-block;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        }
+
         .dropdown {
             position: relative;
             display: inline-block;
@@ -117,7 +139,7 @@
     </style>
 </head>
 <body>
-<div class="user-page-container">
+    <div class="user-page-container">
         <div class="nav-container">
                 <div class="navbar">
                     <nav>
@@ -125,6 +147,7 @@
                     <a href="shop.php">Shop</a>
                     <a href="set.php">Set</a>
                     <a href="cart.php">Cart</a>
+                    <a href="orders.php">Orders</a>
                     <?php if ($_SESSION['user_admin'] == 'Y'): ?>
                     <div class="dropdown">
                         <a href="#" class="dropbtn">Admin</a>
@@ -140,70 +163,42 @@
                     </nav>
                 </div>
         </div>
-    <div class="container">
-<?php
-// Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$database = "confectionary";
+        <div class="container">
+            <?php
+            // Database connection
+            $servername = "localhost";
+            $username = "root";
+            $password = "";
+            $database = "confectionary";
 
-$conn = new mysqli($servername, $username, $password, $database);
+            $conn = new mysqli($servername, $username, $password, $database);
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
 
-if(isset($_POST['update_submit'])) {
-    $user_id = $_POST['user_id'];
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    $admin = $_POST['admin'];
+            // Fetching items from the database
+            $sql = "SELECT * FROM reports";
+            $result = $conn->query($sql);
 
-    // Check if any field has been updated
-    $sql_select = "SELECT user_name, user_password, user_admin FROM user WHERE user_ID = $user_id";
-    $result = $conn->query($sql_select);
-    $row = $result->fetch_assoc();
+            if ($result->num_rows > 0) {
+                while($row = $result->fetch_assoc()) {
+                    echo '<div class="item-box">';
 
-    $current_username = $row['user_name'];
-    $current_password = $row['user_password'];
-    $current_admin = $row['user_admin'];
-
-    $update_query = "";
-
-    if ($username != $current_username) {
-        $update_query .= "user_name='$username', ";
-    }
-    if ($password != $current_password) {
-        $update_query .= "user_password='$password', ";
-    }
-    if ($admin != $current_admin) {
-        $update_query .= "user_admin='$admin', ";
-    }
-
-    $update_query = rtrim($update_query, ', ');
-
-    if (!empty($update_query)) {
-        $sql_update = "UPDATE user SET $update_query WHERE user_ID = $user_id";
-
-        if ($conn->query($sql_update) === TRUE) {
-            echo '<div class="container">';
-            echo '<div class="item-box">';
-            echo '<p><strong>User ID:</strong> ' . $user_id . '</p>';
-            echo '<p><strong>Username:</strong> ' . $username . '</p>';
-            echo '<p><strong>User Password:</strong> ' . $password . '</p>';
-            echo '<p><strong>Admin:</strong> ' . $admin . '</p>';
-            echo '<p>User information updated successfully.</p>';
-            echo '<a href="Admin-UserListing.php">Return to User Listing</a>';
-            echo '</div>';
-            echo '</div>';
-        } else {
-            echo '<div class="message">Error updating user information: ' . $conn->error . '</div>';
-        }
-    } else {
-        echo '<div class="message">No changes made.</div>';
-    }
-}
-echo '</div>';
-$conn->close();
-?>
+                    echo '<p><strong>Report ID:</strong> ' . $row["report_ID"] . '</p>';
+                    echo '<p><strong>User ID:</strong> ' . $row["user_ID"] . '</p>';
+                    echo '<p><strong>Catalog ID:</strong> ' . $row["catalog_ID"] . '</p>';
+                    echo '<p><strong>Quantity:</strong> ' . $row["quantity"] . '</p>';
+                    
+                    echo '</form>';
+                    echo '</div>';
+                }
+            } else {
+                echo "0 results";
+            }
+            $conn->close();
+            ?>
+        </div>
+    </div>
+</body>
+</html>

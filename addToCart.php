@@ -1,12 +1,10 @@
 <?php
 session_start();
-// Database connection parameters
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "confectionary";
 
-// Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Check if the request method is POST
@@ -45,7 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Invalid request method or missing parameters
 http_response_code(400); // Send bad request status code
-exit(); // Exit PHP script
+exit(); 
 ?>

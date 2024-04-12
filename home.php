@@ -128,6 +128,7 @@ if (!isset($_SESSION['user_id'])) {
                 <a href="shop.php">Shop</a>
                 <a href="set.php">Set</a>
                 <a href="cart.php">Cart</a>
+                <a href="orders.php">Orders</a>
                 <?php if ($_SESSION['user_admin'] == 'Y'): ?>
                 <div class="dropdown">
                     <a href="#" class="dropbtn">Admin</a>

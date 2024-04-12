@@ -137,6 +137,7 @@
                 <a href="shop.php">Shop</a>
                 <a href="set.php">Set</a>
                 <a href="cart.php">Cart</a>
+                <a href="orders.php">Orders</a>
                 <?php if ($_SESSION['user_admin'] == 'Y'): ?>
                 <div class="dropdown">
                     <a href="#" class="dropbtn">Admin</a>
@@ -145,6 +146,7 @@
                         <a href="Admin-ItemCreation.php">Create Items</a>
                         <a href="Admin-ItemListing.php">Update Items</a>
                         <a href="Admin-UserListing.php">Update Users</a>
+                        <a href="Admin-UserListing.php">Order History</a>
                     </div>
                 </div>
                 <?php endif; ?>

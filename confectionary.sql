@@ -79,6 +79,19 @@ CREATE TABLE IF NOT EXISTS cart
   CONSTRAINT `catalog_ID` FOREIGN KEY (`catalog_ID`) REFERENCES `catalog` (`catalog_ID`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+DROP TABLE IF EXISTS `reports`;
+CREATE TABLE IF NOT EXISTS `reports`
+(
+  report_ID INT(8) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  user_ID INT(8) NOT NULL,
+  catalog_ID INT(8) NOT NULL,
+  quantity INT(10) NOT NULL,
+  KEY `user_ID` (`user_ID`),
+  KEY `catalog_ID` (`catalog_ID`),
+  CONSTRAINT `fk_reports_user_ID` FOREIGN KEY (`user_ID`) REFERENCES `user` (`user_ID`),
+  CONSTRAINT `fk_reports_catalog_ID` FOREIGN KEY (`catalog_ID`) REFERENCES `catalog` (`catalog_ID`)
+);
+
 INSERT INTO `user` (user_name, user_password, user_admin, user_funds) VALUES
 ('john_doe', 'password123', 'N', 100),
 ('admin_user', 'adminpass', 'Y', 500),
