@@ -167,7 +167,7 @@
             $row = $result->fetch_assoc();
             return $row["item_name"];
         } else {
-            return "Item not found";
+            return "NULL";
         }
     }
 
@@ -181,7 +181,7 @@
             $row = $result->fetch_assoc();
             return $row["item_name"];
         } else {
-            return "Item not found";
+            return "NULL";
         }
     }
 

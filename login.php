@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
-        $_SESSION['user_id'] = $user['user_ID'];
+        $_SESSION['user_ID'] = $user['user_ID'];
         $_SESSION['user_admin'] = $user['user_admin']; // Set the session variable for admin status
         header("Location: home.php");
         exit();

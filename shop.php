@@ -243,7 +243,6 @@
         echo "0 results";
     }
 
-    // Close connection
     $conn->close();
     ?>
     <script>

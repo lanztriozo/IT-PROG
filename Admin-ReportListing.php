@@ -167,7 +167,7 @@
             $row = $result->fetch_assoc();
             return $row["item_name"];
         } else {
-            return "Item not found";
+            return "NULL";
         }
     }
 
@@ -181,7 +181,7 @@
             $row = $result->fetch_assoc();
             return $row["item_name"];
         } else {
-            return "Item not found";
+            return "NULL";
         }
     }
 
@@ -258,6 +258,7 @@ if ($result->num_rows > 0) {
         while ($row = $itemresult->fetch_assoc()) {
             echo '<div class="item-box">
                     <h3>User Name: ' . $row["user_name"] . '</h3>
+                    <p>User ID: ' . $row["user_ID"] . '</p>
                     <p>Item ID: ' . $row["item_ID"] . '</p>
                     <p>Item Name: ' . CatalogItemName($conn, $row["catalog_ID"]) . '</p>
                     <p>Catalog ID: ' . $row["catalog_ID"] . '</p>
