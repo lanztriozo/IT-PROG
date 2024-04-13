@@ -1,9 +1,6 @@
 <?php
 session_start();
 
-// Simulate being logged in as userID 1 for testing purposes
-$_SESSION['user_ID'] = 1;
-
 // Database connection parameters
 $servername = "localhost";
 $username = "root";
@@ -120,6 +117,17 @@ if ($cartResult->num_rows > 0) {
         height: 60vh;
     }
 
+    .add-to-funds-button {
+    background-color: #327344; 
+    color: white;
+    border: 1px solid #327344; 
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    text-align: center;
+    margin-left: 10px;
+    }
+
     table {
         width: 100%;
         border-collapse: collapse;
@@ -208,7 +216,7 @@ if ($cartResult->num_rows > 0) {
                         <a href="Admin-ItemCreation.php">Create Items</a>
                         <a href="Admin-ItemListing.php">Update Items</a>
                         <a href="Admin-UserListing.php">Update Users</a>
-                        <a href="Admin-UserListing.php">Order History</a>
+                        <a href="Admin-ReportListing.php">Order History</a>
                     </div>
                 </div>
                 <?php endif; ?>
@@ -219,6 +227,14 @@ if ($cartResult->num_rows > 0) {
         <h2>My Cart</h2>
         <?php
             if (!empty($cartItems)) {
+                echo '<form method="post" action="addToFunds.php">';
+                echo '<input type="number" name="fundsToAdd" class="quantity-input" placeholder="Funds" min="1" max="">';
+                echo '<button type="submit" class="add-to-funds-button">Add to Funds</button>';
+                if (isset($_SESSION['fundsincrease']) && $_SESSION['fundsincrease']) {
+                    echo '<div style="color: green;">Funds Increased</div>';
+                    unset($_SESSION['fundsincrease']);
+                }
+                echo '</form>';
                 echo '<table>';
                 echo '<tr><th>Item Name</th><th>Price</th><th>Quantity</th><th>Remove</th></tr>';
                 foreach ($cartItems as $item) {
@@ -235,10 +251,8 @@ if ($cartResult->num_rows > 0) {
                 }
                 echo '</table>';
 
-                // Display total price
                 echo '<p>Total Price: ₱' . $totalPrice . '</p>';
 
-                // Display user funds
                 echo '<p>Your Funds: ₱' . $userFunds . '</p>';
 
                 // Checkout button

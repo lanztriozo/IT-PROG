@@ -86,6 +86,7 @@ CREATE TABLE IF NOT EXISTS `reports`
   user_ID INT(8) NOT NULL,
   catalog_ID INT(8) NOT NULL,
   quantity INT(10) NOT NULL,
+  price INT(10) NOT NULL,
   KEY `user_ID` (`user_ID`),
   KEY `catalog_ID` (`catalog_ID`),
   CONSTRAINT `fk_reports_user_ID` FOREIGN KEY (`user_ID`) REFERENCES `user` (`user_ID`),

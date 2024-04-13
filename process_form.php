@@ -53,10 +53,9 @@ mysqli_query($conn, "INSERT INTO Catalog (catalog_id, set_id) VALUES ($new_catal
 // Insert a new instance into Cart with user_id and catalog_id
 mysqli_query($conn, "INSERT INTO Cart (user_ID, catalog_id, quantity) VALUES ($userid, $new_catalog_id, $quantity)");
 
-// Close the database connection
 mysqli_close($conn);
 
 // Redirect or perform other actions after successful submission
-header("Location: home.php");
+header("Location: cart.php");
 exit();
 ?>

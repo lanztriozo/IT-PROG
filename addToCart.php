@@ -7,7 +7,6 @@ $dbname = "confectionary";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check if the request method is POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Check if the necessary parameters are set
     if (isset($_POST['itemId']) && isset($_POST['userid']) && isset($_POST['quantity'])) {

@@ -35,7 +35,7 @@
         background-color: #fa89d1;
         box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
         border-radius: 50px;
-        margin-left: 80px;
+        margin-left: 40px;
         margin-top: 20px;
     }
 
@@ -142,7 +142,7 @@
                         <a href="Admin-ItemCreation.php">Create Items</a>
                         <a href="Admin-ItemListing.php">Update Items</a>
                         <a href="Admin-UserListing.php">Update Users</a>
-                        <a href="Admin-UserListing.php">Order History</a>
+                        <a href="Admin-ReportListing.php">Order History</a>
                     </div>
                 </div>
                 <?php endif; ?>
@@ -212,18 +212,14 @@
     // SQL query to retrieve items with category filter
     $sql = "SELECT item_ID, item_name, item_desc, item_stock, item_price FROM item" . $categoryFilter;
     
-    // Prepare the SQL statement
     $stmt = $conn->prepare($sql);
-    
-    // Bind parameters if necessary
+
     if ($selectedCategory) {
         $stmt->bind_param("s", $selectedCategory); // Assuming category is a string, change "s" if it's a different data type
     }
     
-    // Execute the statement
     $stmt->execute();
-    
-    // Get the result
+
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {

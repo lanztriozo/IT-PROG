@@ -163,7 +163,7 @@
                         <a href="Admin-ItemCreation.php">Create Items</a>
                         <a href="Admin-ItemListing.php">Update Items</a>
                         <a href="Admin-UserListing.php">Update Users</a>
-                        <a href="Admin-UserListing.php">Order History</a>
+                        <a href="Admin-ReportListing.php">Order History</a>
                     </div>
                 </div>
                 <?php endif; ?>

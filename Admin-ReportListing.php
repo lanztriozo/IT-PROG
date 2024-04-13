@@ -29,6 +29,10 @@
             width: 300px;
             float: left;
             background-color: #ffffff;
+            border: 2px solid #eb8dc8;
+            border-radius: 5px;
+            display: inline-block;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
         }
 
         .update-btn {
@@ -98,15 +102,6 @@
             flex-direction: column;
         }
 
-        .item-box {
-            border: 2px solid #eb8dc8;
-            border-radius: 5px;
-            padding: 10px;
-            margin: 10px;
-            width: 300px;
-            display: inline-block;
-            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-        }
 
         .dropdown {
             position: relative;
@@ -156,7 +151,7 @@
                         <a href="Admin-ItemCreation.php">Create Items</a>
                         <a href="Admin-ItemListing.php">Update Items</a>
                         <a href="Admin-UserListing.php">Update Users</a>
-                        <a href="Admin-UserListing.php">Order History</a>
+                        <a href="Admin-ReportListing.php">Order History</a>
                     </div>
                 </div>
                 <?php endif; ?>
@@ -165,40 +160,118 @@
         </div>
         <div class="container">
             <?php
-            // Database connection
-            $servername = "localhost";
-            $username = "root";
-            $password = "";
-            $database = "confectionary";
+    function getItemName($conn, $itemID) {
+        $Setquery = "SELECT item_name FROM item WHERE item_ID = $itemID";
+        $result = $conn->query($Setquery);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            return $row["item_name"];
+        } else {
+            return "Item not found";
+        }
+    }
 
-            $conn = new mysqli($servername, $username, $password, $database);
+    function CatalogItemName($conn, $catalogID) {
+        $query = "SELECT item.item_name
+                  FROM item
+                  INNER JOIN catalog ON item.item_ID = catalog.item_ID
+                  WHERE catalog.catalog_ID = $catalogID";
+        $result = $conn->query($query);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            return $row["item_name"];
+        } else {
+            return "Item not found";
+        }
+    }
 
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-            }
+    // get user id
+    $userid = isset($_SESSION['user_ID']) ? $_SESSION['user_ID'] : 0;
+    
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "confectionary";
 
-            // Fetching items from the database
-            $sql = "SELECT * FROM reports";
-            $result = $conn->query($sql);
+    $conn = new mysqli($servername, $username, $password, $dbname);
 
-            if ($result->num_rows > 0) {
-                while($row = $result->fetch_assoc()) {
-                    echo '<div class="item-box">';
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
 
-                    echo '<p><strong>Report ID:</strong> ' . $row["report_ID"] . '</p>';
-                    echo '<p><strong>User ID:</strong> ' . $row["user_ID"] . '</p>';
-                    echo '<p><strong>Catalog ID:</strong> ' . $row["catalog_ID"] . '</p>';
-                    echo '<p><strong>Quantity:</strong> ' . $row["quantity"] . '</p>';
-                    
-                    echo '</form>';
-                    echo '</div>';
+    $Setquery = "SELECT reports.report_ID, reports.user_ID, reports.catalog_ID, reports.quantity, reports.price, item.item_name, user.user_name, set_table.item_ID_1, set_table.item_ID_2, set_table.item_ID_3, set_table.item_ID_4, catalog.set_ID
+    FROM reports
+    INNER JOIN item ON reports.catalog_ID = item.item_ID
+    INNER JOIN user ON reports.user_ID = user.user_ID
+    INNER JOIN catalog ON reports.catalog_ID = catalog.catalog_ID
+    INNER JOIN `set` AS set_table ON catalog.set_ID = set_table.set_ID";
+
+    $result = $conn->query($Setquery);
+
+if ($result->num_rows > 0) {
+    $set_items = array();
+
+    while ($row = $result->fetch_assoc()) {
+        $set_id = $row['set_ID']; 
+        if (!isset($set_items[$set_id])) {
+            $set_items[$set_id] = array();
+        }
+        $set_items[$set_id][] = $row;
+    }
+
+    foreach ($set_items as $set_id => $items) {
+        echo '<div class="item-container">';
+        foreach ($items as $item) {
+            if ($item['set_ID']) {
+                // If set, display all items found in set
+                echo '<div class="item-box">';
+                echo '<h3>User Name: ' . $item["user_name"] . '</h3>';
+                echo '<p>Set ID: ' . $item["set_ID"] . '</p>';
+                echo '<p>Set Items:</p>';
+                echo '<ul>';
+                echo '<li>' . getItemName($conn, $item["item_ID_1"]) . '</li>';
+                echo '<li>' . getItemName($conn, $item["item_ID_2"]) . '</li>';
+                echo '<li>' . getItemName($conn, $item["item_ID_3"]) . '</li>';
+                echo '<li>' . getItemName($conn, $item["item_ID_4"]) . '</li>';
+                echo '</ul>';
+                echo '<p>Quantity: ' . $item["quantity"] . '</p>';
+                echo '<p>Price: ₱' . $item["price"] . '</p>';
+                echo '</div>';
                 }
-            } else {
-                echo "0 results";
             }
-            $conn->close();
-            ?>
-        </div>
-    </div>
+            echo '</div>';
+        }
+    } else {
+        echo "";
+    }
+
+    $query = "SELECT reports.report_ID, reports.user_ID, reports.catalog_ID, reports.quantity, reports.price, item.item_name, user.user_name, catalog.item_ID
+    FROM reports
+    INNER JOIN item ON reports.catalog_ID = item.item_ID
+    INNER JOIN user ON reports.user_ID = user.user_ID
+    INNER JOIN catalog ON reports.catalog_ID = catalog.catalog_ID";
+
+    $itemresult = $conn->query($query);
+
+    if ($itemresult->num_rows > 0) {
+        echo '<div class="item-container">';
+        while ($row = $itemresult->fetch_assoc()) {
+            echo '<div class="item-box">
+                    <h3>User Name: ' . $row["user_name"] . '</h3>
+                    <p>Item ID: ' . $row["item_ID"] . '</p>
+                    <p>Item Name: ' . CatalogItemName($conn, $row["catalog_ID"]) . '</p>
+                    <p>Catalog ID: ' . $row["catalog_ID"] . '</p>
+                    <p>Quantity: ' . $row["quantity"] . '</p>
+                    <p>Price: ₱' . $row["price"] . '</p>
+                </div>';
+        }
+        echo '</div>';
+    } else {
+        echo "";
+    }
+
+$conn->close();
+
+?>
 </body>
 </html>
